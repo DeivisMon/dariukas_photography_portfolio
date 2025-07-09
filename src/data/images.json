@@ -1,0 +1,238 @@
+[
+    {
+        "src": "./images/1.jpg",
+        "alt": "Image 1",
+        "projectType": "Renginiai",
+        "date": "2023",
+        "place": "Paris"
+    },
+    {
+        "src": "./images/2.jpg",
+        "alt": "Image 2",
+        "projectType": "Renginiai",
+        "date": "2024",
+        "place": "New York"
+    },
+    {
+        "src": "./images/3.jpg",
+        "alt": "Image 3",
+        "projectType": "Renginiai",
+        "date": "2025",
+        "place": "Milan"
+    },
+    {
+        "src": "./images/4.jpg",
+        "alt": "Image 4",
+        "projectType": "Renginiai",
+        "date": "2026",
+        "place": "London"
+    },
+    {
+        "src": "./images/5.jpg",
+        "alt": "Image 5",
+        "projectType": "Renginiai",
+        "date": "2027",
+        "place": "Tokyo"
+    },
+    {
+        "src": "./images/6.jpg",
+        "alt": "Image 6",
+        "projectType": "Portretai",
+        "date": "2028",
+        "place": "Berlin"
+    },
+    {
+        "src": "./images/7.jpg",
+        "alt": "Image 7",
+        "projectType": "Portretai",
+        "date": "2029",
+        "place": "Rome"
+    },
+    {
+        "src": "./images/8.jpg",
+        "alt": "Image 8",
+        "projectType": "Portretai",
+        "date": "2022",
+        "place": "Madrid"
+    },
+    {
+        "src": "./images/9.jpg",
+        "alt": "Image 9",
+        "projectType": "Portretai",
+        "date": "2021",
+        "place": "Istanbul"
+    },
+    {
+        "src": "./images/10.jpg",
+        "alt": "Image 10",
+        "projectType": "Portretai",
+        "date": "2020",
+        "place": "Los Angeles"
+    },
+    {
+        "src": "./images/11.jpg",
+        "alt": "Image 11",
+        "projectType": "Diskotekos",
+        "date": "2019",
+        "place": "Seoul"
+    },
+    {
+        "src": "./images/12.jpg",
+        "alt": "Image 12",
+        "projectType": "Diskotekos",
+        "date": "2022",
+        "place": "Shanghai"
+    },
+    {
+        "src": "./images/13.jpg",
+        "alt": "Image 13",
+        "projectType": "Diskotekos",
+        "date": "2023",
+        "place": "Sydney"
+    },
+    {
+        "src": "./images/14.jpg",
+        "alt": "Image 14",
+        "projectType": "Diskotekos",
+        "date": "2024",
+        "place": "Amsterdam"
+    },
+    {
+        "src": "./images/15.jpg",
+        "alt": "Image 15",
+        "projectType": "Diskotekos",
+        "date": "2025",
+        "place": "Copenhagen"
+    },
+    {
+        "src": "./images/16.jpg",
+        "alt": "Image 16",
+        "projectType": "Veiksmas",
+        "date": "2026",
+        "place": "Vienna"
+    },
+    {
+        "src": "./images/17.jpg",
+        "alt": "Image 17",
+        "projectType": "Veiksmas",
+        "date": "2019",
+        "place": "Toronto"
+    },
+    {
+        "src": "./images/18.jpg",
+        "alt": "Image 18",
+        "projectType": "Veiksmas",
+        "date": "2020",
+        "place": "Mexico City"
+    },
+    {
+        "src": "./images/19.jpg",
+        "alt": "Image 19",
+        "projectType": "Veiksmas",
+        "date": "2021",
+        "place": "Buenos Aires"
+    },
+    {
+        "src": "./images/20.jpg",
+        "alt": "Image 20",
+        "projectType": "Veiksmas",
+        "date": "2022",
+        "place": "Cape Town"
+    },
+    {
+        "src": "./images/21.jpg",
+        "alt": "Image 21",
+        "projectType": "Koncertai",
+        "date": "2023",
+        "place": "Lisbon"
+    },
+    {
+        "src": "./images/22.jpg",
+        "alt": "Image 22",
+        "projectType": "Koncertai",
+        "date": "2024",
+        "place": "Barcelona"
+    },
+    {
+        "src": "./images/23.jpg",
+        "alt": "Image 23",
+        "projectType": "Koncertai",
+        "date": "2025",
+        "place": "Hong Kong"
+    },
+    {
+        "src": "./images/24.jpg",
+        "alt": "Image 24",
+        "projectType": "Koncertai",
+        "date": "2020",
+        "place": "Dubai"
+    },
+    {
+        "src": "./images/25.jpg",
+        "alt": "Image 25",
+        "projectType": "Koncertai",
+        "date": "2021",
+        "place": "Moscow"
+    },
+    {
+        "src": "./images/26.jpg",
+        "alt": "Image 26",
+        "projectType": "Koncertai",
+        "date": "2022",
+        "place": "Buenos Aires"
+    },
+    {
+        "src": "./images/27.jpg",
+        "alt": "Image 27",
+        "projectType": "Veiksmas",
+        "date": "2023",
+        "place": "Stockholm"
+    },
+    {
+        "src": "./images/28.jpg",
+        "alt": "Image 28",
+        "projectType": "Veiksmas",    
+        "date": "2024",
+        "place": "Oslo"
+    },
+    {
+        "src": "./images/29.jpg",
+        "alt": "Image 29",
+        "projectType": "Renginiai",
+        "date": "2025",
+        "place": "Zurich"
+    },
+    {
+        "src": "./images/30.jpg",
+        "alt": "Image 30",
+        "projectType": "Koncertai",    
+        "date": "2026",
+        "place": "Monaco"
+    },
+    {
+        "src": "./images/31.jpg",
+        "alt": "Image 31",
+        "projectType": "Portretai", 
+        "date": "2027",
+        "place": "Venice"
+    },
+    {
+        "src": "./images/32.jpg",
+        "alt": "Image 32",
+        "projectType": "Portretai",
+        "date": "2028",
+        "place": "Florence"
+    },
+    {
+        "src": "./images/8.jpg",
+        "alt": "Image 33",
+        "projectType": "Veiksmas",
+        "place": "Cannes"
+    },
+    {
+        "src": "./images/12.jpg",
+        "alt": "Image 34",
+        "projectType": "Koncertai",
+        "place": "Beverly Hills"
+    }
+]
