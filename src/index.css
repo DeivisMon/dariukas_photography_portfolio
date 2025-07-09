@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+/* This hides scrollbar for all browsers */
+html {
+  overflow: -moz-scrollbar-none; /* Old Firefox */
+  scrollbar-width: none; /* New Firefox */
+  -ms-overflow-style: none; /* IE & Edge */
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none; 
+}
+
+body {
+    font-family: "PP Supply Mono", monospace;
+    text-transform: uppercase;
+    font-weight: 500;
+    background-color: rgba(0, 0, 0, 0.900);
+    color: rgba(245, 222, 179, 0.8);
+}
