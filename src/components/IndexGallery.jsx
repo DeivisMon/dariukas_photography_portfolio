@@ -70,7 +70,7 @@ const DraggableGallery = () => {
     velocityX: 0,
     velocityY: 0,
     lastTime: 0,
-    mouseHasMoved: false,
+    mouseHasMoved: false
   });
   const currentVisibleItemIds = useRef(new Set()); // A Set to track IDs of items currently in the DOM.
   const expandedItemRef = useRef(null); // Ref for the DOM element of the expanded item.
@@ -469,7 +469,6 @@ const DraggableGallery = () => {
     dragRef.current.startX = e.clientX;
     dragRef.current.startY = e.clientY;
     dragRef.current.lastTime = Date.now();
-    dragRef.current.initialGrabX = e.clientX;
   };
 
   /**
@@ -505,21 +504,24 @@ const handleMouseUp = useCallback(() => {
 
   dragRef.current.isDragging = false;
 
-  const currentX = positionRef.current.x;
-  const viewportCenter = window.innerWidth / 2;
+  const pos = positionRef.current;
+  const velocityX = dragRef.current.velocityX;
+  const momentumMultiplier = 200; // You can tweak this value for stronger fling effect
+  const padding = -30; // Optional: how much space you want between the column's start and the center
 
-  const currentFirstColumnCenter = currentX + (settings.baseWidth / 2);
-  const offsetCols = (viewportCenter - currentFirstColumnCenter) / cellWidth;
+  // Apply momentum to the target position
+  pos.targetX += velocityX * momentumMultiplier;
 
-  // Use drag direction instead of always rounding
-  const dx = dragRef.current.velocityX;
-  const snappedColIndex =
-    dx > 0 ? Math.floor(offsetCols) : dx < 0 ? Math.ceil(offsetCols) : Math.round(offsetCols);
+  // Snap after momentum by calculating nearest column start to center + padding
+  const columnIndex = Math.round((-pos.targetX + (window.innerWidth / 2) - padding) / cellWidth);
 
-  const targetX = viewportCenter - (snappedColIndex * cellWidth) - (settings.baseWidth / 2);
-  positionRef.current.targetX = targetX;
+  // Final snapping position: aligns column's **start** to screen center minus padding
+  const targetX = -columnIndex * cellWidth + (window.innerWidth / 2) - padding;
 
-}, [cellWidth, settings.baseWidth]);
+  pos.targetX = targetX;
+
+}, [cellWidth]);
+
 
 
   /**
