@@ -1,61 +1,83 @@
+/**
+ * @file DraggableGallery.jsx
+ * @description A highly interactive, draggable, and zoomable image gallery component for React.
+ * It renders a virtualized grid of images that can be freely dragged around.
+ * Images can be clicked to expand into a centered view with a background overlay.
+ * The gallery uses direct DOM manipulation within a React component for performance-critical animations.
+ */
+
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Images from "../data/images.json";
 import AnimatedText from '../utils/AnimatedText';
+import { gallerySettings as defaultSettings } from '../data/galleryConfig.js';
 
+/**
+ * A draggable and zoomable image gallery component.
+ * @returns {JSX.Element} The rendered gallery component.
+ */
 const DraggableGallery = () => {
 
-    const mockImages = Array.from({ length: 30 }, (_, i) => ({
+  // Mocks image data for development purposes.
+  const mockImages = Array.from({ length: 30 }, (_, i) => ({
     src: `https://picsum.photos/1000/750?random=${i + 1}`
   }));
 
+  // Extracts image URLs and project types from the imported JSON data.
   const imageUrls = mockImages.map((image) => image.src);
-//   const imageUrls = Images.map((image) => image.src);
+  // const imageUrls = Images.map((image) => image.src); // This would be used with the actual data
   const imageProjectTypes = Images.map((image) => image.projectType);
 
-
+  // State for managing the visibility of a settings panel.
   const [panelVisible, setPanelVisible] = useState(false);
+  // State to track if an item is currently expanded (zoomed in).
   const [isExpanded, setIsExpanded] = useState(false);
+  // State to store the data of the currently active/expanded item.
   const [activeItemData, setActiveItemData] = useState(null);
+  // State for the title of the project being displayed.
   const [projectTitle, setProjectTitle] = useState('');
+  // State for the opacity of the background overlay when an item is expanded.
   const [overlayOpacity, setOverlayOpacity] = useState(0);
 
-  const [settings, setSettings] = useState({
-    baseWidth: 400,
-    smallHeight: 330,
-    largeHeight: 500,
-    itemGap: 65,
-    hoverScale: 1.05,
-    expandedScale: 0.4,
-    dragEase: 0.075,
-    momentumFactor: 200,
-    bufferZone: 3,
-    borderRadius: 0,
-    vignetteSize: 0,
-    vignetteStrength: 0.7,
-    pageVignetteSize: 200,
-    overlayOpacity: 0.9,
-    overlayEaseDuration: 0.8,
-    zoomDuration: 0.6
-  });
+  const [settings, setSettings] = useState(defaultSettings);
 
-  const canvasRef = useRef(null);
-  const containerRef = useRef(null);
-  const animationRef = useRef(null);
-  const positionRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 });
-  const dragRef = useRef({
+  // Recalculate settings on window resize for responsiveness.
+  useEffect(() => {
+    const handleResize = () => {
+      const screenWidth = window.innerWidth;
+      if (screenWidth < 768) { // Mobile breakpoint
+        setSettings(prev => ({ ...prev, columns: 1, itemGap: 30, baseWidth: screenWidth - 60 }));
+      } else if (screenWidth < 1024) { // Tablet breakpoint
+        setSettings(prev => ({ ...prev, columns: 2, itemGap: 45, baseWidth: (screenWidth / 2) - 90 }));
+      } else { // Desktop
+        setSettings(prev => ({ ...prev, ...defaultSettings }));
+      }
+    };
+
+    handleResize(); // Initial call
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Refs for direct DOM access and for storing values that don't trigger re-renders.
+  const canvasRef = useRef(null); // Ref for the element that contains all gallery items.
+  const containerRef = useRef(null); // Ref for the main gallery container.
+  const animationRef = useRef(null); // Ref to store the requestAnimationFrame ID.
+  const positionRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 }); // Ref for the gallery's position and target position.
+  const dragRef = useRef({ // Ref to store dragging state.
     isDragging: false,
     startX: 0,
     startY: 0,
     velocityX: 0,
     velocityY: 0,
     lastTime: 0,
-    mouseHasMoved: false
+    mouseHasMoved: false,
   });
-  const currentVisibleItemIds = useRef(new Set());
-  const expandedItemRef = useRef(null);
-  const originalClickedItemRect = useRef(null);
+  const currentVisibleItemIds = useRef(new Set()); // A Set to track IDs of items currently in the DOM.
+  const expandedItemRef = useRef(null); // Ref for the DOM element of the expanded item.
+  const originalClickedItemRect = useRef(null); // Ref to store the bounding box of an item before it expands.
 
-  const columns = 4;
+  // Grid layout settings.
+  const { columns } = settings;
   const itemSizes = [
     { width: settings.baseWidth, height: settings.smallHeight },
     { width: settings.baseWidth, height: settings.largeHeight }
@@ -63,11 +85,31 @@ const DraggableGallery = () => {
   const cellWidth = settings.baseWidth + settings.itemGap;
   const cellHeight = Math.max(settings.smallHeight, settings.largeHeight) + settings.itemGap;
 
+  /**
+   * Generates a unique ID for a gallery item based on its column and row.
+   * @param {number} col - The column index.
+   * @param {number} row - The row index.
+   * @returns {string} The unique item ID.
+   */
   const getItemId = (col, row) => `${col},${row}`;
+
+  /**
+   * Determines the size of an item based on its row and column.
+   * @param {number} row - The row index.
+   * @param {number} col - The column index.
+   * @returns {{width: number, height: number}} The size of the item.
+   */
   const getItemSize = (row, col) => {
     const hash = ((row * columns + col) % itemSizes.length + itemSizes.length) % itemSizes.length;
     return itemSizes[hash];
   };
+
+  /**
+   * Gets the content (image, title, etc.) for an item based on its row and column.
+   * @param {number} row - The row index.
+   * @param {number} col - The column index.
+   * @returns {{title: string, image: string, number: number}} The content for the item.
+   */
   const getItemContent = (row, col) => {
     const itemNum = ((row * columns + col) % imageUrls.length + imageUrls.length) % imageUrls.length;
     return {
@@ -77,12 +119,21 @@ const DraggableGallery = () => {
     };
   };
 
-  console.log(getItemContent(0, 0));
+  /**
+   * Calculates the top-left position of an item in the grid.
+   * @param {number} col - The column index.
+   * @param {number} row - The row index.
+   * @returns {{x: number, y: number}} The position of the item.
+   */
   const getItemPosition = (col, row) => ({
     x: col * cellWidth,
     y: row * cellHeight
   });
 
+  /**
+   * This is the core virtualization function. It calculates which items should be visible
+   * in the viewport and creates/updates/removes DOM elements accordingly.
+   */
   const updateVisibleItems = useCallback(() => {
     const buffer = settings.bufferZone;
     const viewWidth = window.innerWidth * (1 + buffer);
@@ -90,6 +141,7 @@ const DraggableGallery = () => {
 
     const { x: currentX, y: currentY } = positionRef.current;
 
+    // Calculate the range of visible columns and rows.
     const startCol = Math.floor((-currentX - viewWidth / 2) / cellWidth);
     const endCol = Math.ceil((-currentX + viewWidth / 2) / cellWidth);
     const startRow = Math.floor((-currentY - viewHeight / 2) / cellHeight);
@@ -99,6 +151,7 @@ const DraggableGallery = () => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
+    // Loop through the visible grid cells.
     for (let row = startRow; row <= endRow; row++) {
       for (let col = startCol; col <= endCol; col++) {
         const itemId = getItemId(col, row);
@@ -115,31 +168,26 @@ const DraggableGallery = () => {
           content: getItemContent(row, col)
         };
 
+        // If the item element doesn't exist, create it.
         if (!itemElement) {
           itemElement = document.createElement('div');
           itemElement.id = itemId;
           itemElement.className = 'absolute bg-black cursor-pointer overflow-hidden transition-opacity duration-300 z-101 gallery-item';
           
-          // --- CRITICAL CHANGE: Conditionally set onclick for items ---
-          // Item should only be clickable if not expanded.
-          // When expanded, the overlay and expanded item handle clicks.
+          // Items are only clickable when not in an expanded state.
           if (!isExpanded) {
-            itemElement.onclick = () => {
-              // No need for stopPropagation here as the overlay will block events
-              // if an item is expanded. This only fires when !isExpanded.
-              handleItemClick(itemData);
-            };
-            itemElement.style.pointerEvents = 'auto'; // Ensure it's clickable
+            itemElement.onclick = () => handleItemClick(itemData);
+            itemElement.style.pointerEvents = 'auto';
           } else {
-            itemElement.onclick = null; // Remove handler
-            itemElement.style.pointerEvents = 'none'; // Make it not clickable
+            itemElement.onclick = null;
+            itemElement.style.pointerEvents = 'none';
           }
-          // --- END CRITICAL CHANGE ---
 
           const itemSize = itemData.size;
           const position = itemData.position;
           const content = itemData.content;
 
+          // Set the style and content of the new item.
           itemElement.style.width = `${itemSize.width}px`;
           itemElement.style.height = `${itemSize.height}px`;
           itemElement.style.left = `${position.x}px`;
@@ -147,31 +195,27 @@ const DraggableGallery = () => {
           itemElement.style.borderRadius = `${settings.borderRadius}px`;
           itemElement.style.opacity = isExpanded && activeItemData?.id !== itemId ? 0 : 1;
 
-console.log(content)
-
           itemElement.innerHTML = `
             <div class="group w-full h-full overflow-hidden relative">
               <img
                 src="${content.image}"
                 alt="Image ${content.number}"
-                class="w-full h-full grayscale group-hover:grayscale-80 transition duration-500 group-hover:scale-105  object-cover pointer-events-none transition-transform duration-300"
-                style="
-                  transform: scale(${settings.hoverScale});
-                  box-shadow: inset 0 0 ${settings.vignetteSize}px rgba(0, 0, 0, 0.5);
-                "
+                class="w-full h-full grayscale group-hover:grayscale-70 transition duration-500 group-hover:scale-105  object-cover pointer-events-none transition-transform duration-300"
+                style="box-shadow: inset 0 0 ${settings.vignetteSize}px rgba(0, 0, 0, 0.5);"
               />
-              <div class="opacity-0 group-hover:opacity-100 absolute bg-gray-900/50 transition-opacity duration-300  bottom-0 left-0 w-full p-2.5 z-10">
-                <div class="text-white text-xs font-medium uppercase tracking-tight mb-0.5 overflow-hidden h-4">
+              <div class="opacity-0 group-hover:opacity-100 absolute bg-gray-900/50 transition-opacity duration-300  bottom-0 left-0 w-full p-4 z-10">
+                <div class="text-white text-xs font-medium uppercase tracking-tight overflow-hidden h-4">
                   ${content.title}
                 </div>
                 <div class="text-gray-400 text-xs font-mono overflow-hidden h-3.5">
-                  #${content.number.toString().padStart(5, '0')}
+                  #${content.number.toString().padStart(3, '0')}
                 </div>
               </div>
             </div>
           `;
           canvas.appendChild(itemElement);
         } else {
+          // If the item already exists, update its properties.
           const opacity = isExpanded && activeItemData?.id !== itemId ? 0 : 1;
           if (parseFloat(itemElement.style.opacity) !== opacity) {
               itemElement.style.opacity = opacity;
@@ -184,7 +228,7 @@ console.log(content)
               img.style.boxShadow = `inset 0 0 ${settings.vignetteSize}px rgba(0, 0, 0, 0.5)`;
           }
 
-          // --- CRITICAL CHANGE: Update onclick for existing items ---
+          // Update click handlers based on the expanded state.
           if (!isExpanded) {
             itemElement.onclick = () => handleItemClick(itemData);
             itemElement.style.pointerEvents = 'auto';
@@ -192,11 +236,11 @@ console.log(content)
             itemElement.onclick = null;
             itemElement.style.pointerEvents = 'none';
           }
-          // --- END CRITICAL CHANGE ---
         }
       }
     }
 
+    // Remove items that are no longer visible.
     currentVisibleItemIds.current.forEach(itemId => {
       if (!nextVisibleItemIds.has(itemId)) {
         const itemToRemove = document.getElementById(itemId);
@@ -208,8 +252,12 @@ console.log(content)
 
     currentVisibleItemIds.current = nextVisibleItemIds;
 
-  }, [settings.bufferZone, cellWidth, cellHeight, settings.borderRadius, settings.hoverScale, settings.vignetteSize, isExpanded, activeItemData]); // isExpanded is now a dependency here!
+  }, [settings.bufferZone, cellWidth, cellHeight, settings.borderRadius, settings.hoverScale, settings.vignetteSize, isExpanded, activeItemData]);
 
+  /**
+   * The main animation loop, powered by requestAnimationFrame.
+   * It smoothly interpolates the gallery's position towards its target position.
+   */
   const animate = useCallback(() => {
     if (!isExpanded) {
       const ease = settings.dragEase;
@@ -228,16 +276,24 @@ console.log(content)
     animationRef.current = requestAnimationFrame(animate);
   }, [isExpanded, settings.dragEase, updateVisibleItems]);
 
-  // handleItemClick will now only be called when !isExpanded, so simplified
+  /**
+   * Handles the click event on a gallery item.
+   * @param {object} item - The data of the clicked item.
+   */
   const handleItemClick = (item) => {
-    if (dragRef.current.mouseHasMoved) return;
+    if (dragRef.current.mouseHasMoved) return; // Prevent click if the mouse was dragged.
     expandItem(item);
   };
 
+  /**
+   * Expands a gallery item to the center of the screen.
+   * @param {object} item - The data of the item to expand.
+   */
   const expandItem = useCallback((item) => {
     setProjectTitle(item.content.title);
     setOverlayOpacity(settings.overlayOpacity);
 
+    // Fade out all other items.
     currentVisibleItemIds.current.forEach(itemId => {
       if (itemId !== item.id) {
         const otherItem = document.getElementById(itemId);
@@ -259,15 +315,17 @@ console.log(content)
     }
 
     setActiveItemData(item);
-    setIsExpanded(true); // This re-renders and triggers updateVisibleItems and the useEffect for animation
+    setIsExpanded(true);
 
   }, [settings.overlayOpacity, settings.overlayEaseDuration]);
 
+  // This effect runs the zoom-in animation when an item is expanded.
   useEffect(() => {
     if (isExpanded && activeItemData && expandedItemRef.current && originalClickedItemRect.current) {
         const expandedEl = expandedItemRef.current;
         const rect = originalClickedItemRect.current;
 
+        // Start the expanded item at the original item's position and size.
         expandedEl.style.width = `${rect.width}px`;
         expandedEl.style.height = `${rect.height}px`;
         expandedEl.style.left = `${rect.left}px`;
@@ -276,13 +334,28 @@ console.log(content)
         expandedEl.style.opacity = 1;
         expandedEl.style.transition = 'none';
 
+        // Force a reflow to apply the initial styles before animating.
         expandedEl.offsetWidth;
 
+        // Calculate the target size and position for the expanded item.
         const viewportWidth = window.innerWidth;
-        const targetWidth = viewportWidth * settings.expandedScale;
-        const aspectRatio = activeItemData.size.height / activeItemData.size.width;
-        const targetHeight = targetWidth * aspectRatio;
+        const viewportHeight = window.innerHeight;
+        const padding = 100; // Px padding from viewport edges
 
+        const maxW = viewportWidth - padding * 2;
+        const maxH = viewportHeight - padding * 2;
+
+        const imgAspectRatio = activeItemData.size.width / activeItemData.size.height;
+
+        let targetWidth = maxW;
+        let targetHeight = targetWidth / imgAspectRatio;
+
+        if (targetHeight > maxH) {
+            targetHeight = maxH;
+            targetWidth = targetHeight * imgAspectRatio;
+        }
+
+        // Apply the transition and animate to the target state.
         expandedEl.style.transition = `
             width ${settings.zoomDuration}s ease-in-out,
             height ${settings.zoomDuration}s ease-in-out,
@@ -299,14 +372,19 @@ console.log(content)
     }
   }, [isExpanded, activeItemData, settings.expandedScale, settings.zoomDuration, settings.overlayEaseDuration]);
 
+  /**
+   * Closes the currently expanded item, animating it back to its grid position.
+   * @param {boolean} immediate - If true, closes the item instantly without animation.
+   * @param {object|null} nextItem - If provided, expands this item after closing the current one.
+   */
   const closeExpandedItem = useCallback((immediate = false, nextItem = null) => {
     const expandedEl = expandedItemRef.current;
 
-    // Reset drag state immediately, regardless of animation
     dragRef.current.isDragging = false;
     dragRef.current.mouseHasMoved = false;
 
     if (immediate && expandedEl) {
+        // Immediate close without animation.
         expandedEl.style.transition = 'none';
         expandedEl.style.opacity = 0;
         setIsExpanded(false);
@@ -320,8 +398,7 @@ console.log(content)
             originalItem.style.opacity = 1;
             originalItem.style.transition = 'none';
         }
-        // Update item visibility/clickability right away
-        updateVisibleItems(); // Re-run to re-enable clicks on items
+        updateVisibleItems();
         if (nextItem) {
             expandItem(nextItem);
         }
@@ -331,6 +408,7 @@ console.log(content)
     if (expandedEl && originalClickedItemRect.current) {
         const rect = originalClickedItemRect.current;
 
+        // Animate the item back to its original position.
         expandedEl.style.transition = `
             width ${settings.zoomDuration}s ease-in-out,
             height ${settings.zoomDuration}s ease-in-out,
@@ -346,6 +424,7 @@ console.log(content)
         expandedEl.style.transform = `translate(0, 0)`;
         expandedEl.style.opacity = 0;
 
+        // After the animation, reset the state.
         setTimeout(() => {
             setIsExpanded(false);
             setActiveItemData(null);
@@ -358,40 +437,45 @@ console.log(content)
                 originalItem.style.opacity = 1;
                 originalItem.style.transition = `opacity ${settings.overlayEaseDuration}s ease-in-out`;
             }
-            // Update item visibility/clickability after animation
-            updateVisibleItems(); // Re-run to re-enable clicks on items
+            updateVisibleItems();
 
             if (nextItem) {
                 expandItem(nextItem);
             }
         }, settings.zoomDuration * 1000);
     } else {
+        // If for some reason the refs are not available, just reset state.
         setIsExpanded(false);
         setActiveItemData(null);
         setProjectTitle('');
         setOverlayOpacity(0);
         originalClickedItemRect.current = null;
-        updateVisibleItems(); // Re-run to re-enable clicks on items
+        updateVisibleItems();
 
         if (nextItem) {
             expandItem(nextItem);
         }
     }
-  }, [activeItemData, expandItem, settings.zoomDuration, settings.overlayEaseDuration, updateVisibleItems]); // Added updateVisibleItems to dependencies
+  }, [activeItemData, expandItem, settings.zoomDuration, settings.overlayEaseDuration, updateVisibleItems]);
 
+  /**
+   * Handles the mouse down event to initiate dragging.
+   * @param {MouseEvent} e - The mouse event.
+   */
   const handleMouseDown = (e) => {
-    // If expanded, the container should not initiate drag.
-    // The overlay/document listener handles closing.
-    if (isExpanded) {
-        return;
-    }
+    if (isExpanded) return; // Don't drag when an item is expanded.
     dragRef.current.isDragging = true;
     dragRef.current.mouseHasMoved = false;
     dragRef.current.startX = e.clientX;
     dragRef.current.startY = e.clientY;
     dragRef.current.lastTime = Date.now();
+    dragRef.current.initialGrabX = e.clientX;
   };
 
+  /**
+   * Handles the mouse move event to update the gallery's target position.
+   * @param {MouseEvent} e - The mouse event.
+   */
   const handleMouseMove = useCallback((e) => {
     if (!dragRef.current.isDragging) return;
 
@@ -413,39 +497,60 @@ console.log(content)
     dragRef.current.startY = e.clientY;
   }, []);
 
-  const handleMouseUp = useCallback(() => {
-    if (!dragRef.current.isDragging) return;
+  /**
+   * Handles the mouse up event to end dragging and apply momentum.
+   */
+const handleMouseUp = useCallback(() => {
+  if (!dragRef.current.isDragging) return;
 
-    dragRef.current.isDragging = false;
+  dragRef.current.isDragging = false;
 
-    const momentumFactor = settings.momentumFactor;
-    positionRef.current.targetX += dragRef.current.velocityX * momentumFactor;
-    positionRef.current.targetY += dragRef.current.velocityY * momentumFactor;
-  }, [settings.momentumFactor]);
+  const currentX = positionRef.current.x;
+  const viewportCenter = window.innerWidth / 2;
 
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'h' || e.key === 'H') {
-      setPanelVisible(prev => !prev);
-    }
-    if (e.key === 'Escape' && isExpanded) {
-      closeExpandedItem();
-    }
-  }, [isExpanded, closeExpandedItem]);
+  const currentFirstColumnCenter = currentX + (settings.baseWidth / 2);
+  const offsetCols = (viewportCenter - currentFirstColumnCenter) / cellWidth;
 
+  // Use drag direction instead of always rounding
+  const dx = dragRef.current.velocityX;
+  const snappedColIndex =
+    dx > 0 ? Math.floor(offsetCols) : dx < 0 ? Math.ceil(offsetCols) : Math.round(offsetCols);
+
+  const targetX = viewportCenter - (snappedColIndex * cellWidth) - (settings.baseWidth / 2);
+  positionRef.current.targetX = targetX;
+
+}, [cellWidth, settings.baseWidth]);
+
+
+  /**
+   * Handles the mouse wheel event to scroll the gallery.
+   * @param {WheelEvent} e - The wheel event.
+   */
+  const handleWheel = useCallback((e) => {
+    if (isExpanded) return;
+    positionRef.current.targetX -= e.deltaX * settings.scrollFactor;
+    positionRef.current.targetY -= e.deltaY * settings.scrollFactor;
+  }, [isExpanded, settings.scrollFactor]);
+
+
+  /**
+   * Handles clicks on the document, used to close the expanded item when clicking outside of it.
+   * @param {MouseEvent} e - The mouse event.
+   */
   const handleDocumentMouseDown = useCallback((e) => {
     if (!isExpanded) return;
 
-    // Check if the click target is the expanded item or its children
+    // If the click is on the expanded item itself, do nothing.
     if (expandedItemRef.current && expandedItemRef.current.contains(e.target)) {
-      // Click was on the expanded image itself, let its onClick handler manage it.
       return;
     }
-    // If the click was not on the expanded item, then close it.
+    // Otherwise, close the item.
     closeExpandedItem();
 
   }, [isExpanded, closeExpandedItem]);
 
 
+  // Effect to set up and tear down global event listeners.
   useEffect(() => {
     if (!isExpanded) {
       window.addEventListener('mousemove', handleMouseMove);
@@ -455,8 +560,6 @@ console.log(content)
       window.removeEventListener('mouseup', handleMouseUp);
     }
 
-    window.addEventListener('keydown', handleKeyDown);
-
     if (isExpanded) {
       document.addEventListener('mousedown', handleDocumentMouseDown);
     }
@@ -464,18 +567,20 @@ console.log(content)
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('mousedown', handleDocumentMouseDown);
     };
-  }, [isExpanded, handleMouseMove, handleMouseUp, handleKeyDown, handleDocumentMouseDown]);
+  }, [isExpanded, handleMouseMove, handleMouseUp, handleDocumentMouseDown]);
 
+  // Effect to initialize the gallery position and start the animation loop on mount.
   useEffect(() => {
-    const centerX = -window.innerWidth / 2;
-    const centerY = -window.innerHeight / 2;
-    positionRef.current.x = centerX;
-    positionRef.current.y = centerY;
-    positionRef.current.targetX = centerX;
-    positionRef.current.targetY = centerY;
+    const galleryContentWidth = settings.columns * settings.baseWidth + (settings.columns - 1) * settings.itemGap;
+    const initialX = (window.innerWidth - galleryContentWidth) / 2;
+    const initialY = -window.innerHeight / 2; // Keep vertical centering as is
+
+    positionRef.current.x = initialX;
+    positionRef.current.y = initialY;
+    positionRef.current.targetX = initialX;
+    positionRef.current.targetY = initialY;
     updateVisibleItems();
     animationRef.current = requestAnimationFrame(animate);
     return () => {
@@ -483,22 +588,23 @@ console.log(content)
         cancelAnimationFrame(animationRef.current);
       }
     };
-  }, [animate, updateVisibleItems]);
+  }, [animate, updateVisibleItems, settings.columns, settings.baseWidth, settings.itemGap]);
 
   return (
     <div className="fixed inset-0 bg-black text-white overflow-hidden font-sans select-none z-101">
 
       <div
         ref={containerRef}
-        className="relative w-full h-full flex items-center justify-center overflow-hidden z-101"
+        className="relative w-full h-full overflow-hidden z-101"
         style={{ cursor: isExpanded ? 'auto' : dragRef.current.isDragging ? 'grabbing' : 'grab' }}
         onMouseDown={handleMouseDown}
+        onWheel={handleWheel}
       >
         <div ref={canvasRef} className="absolute will-change-transform">
-          {/* Items are managed directly by updateVisibleItems */}
+          {/* Gallery items are dynamically inserted here by the updateVisibleItems function */}
         </div>
 
-        {/* Overlay - Z-index adjusted, now the primary click-catcher when expanded */}
+        {/* Background overlay, shown when an item is expanded */}
         <div
           className={`fixed inset-0 bg-black pointer-events-none transition-opacity duration-800 z-[9998] ${
             isExpanded ? 'pointer-events-auto' : ''
@@ -507,6 +613,7 @@ console.log(content)
         />
       </div>
 
+      {/* The expanded item itself */}
       {isExpanded && activeItemData && (
         <div
           ref={expandedItemRef}
@@ -514,7 +621,7 @@ console.log(content)
           style={{
             borderRadius: `${settings.borderRadius}px`,
           }}
-          onClick={closeExpandedItem} // Clicking the image itself still closes it
+          onClick={closeExpandedItem} // Clicking the image closes it
         >
           <img
             src={activeItemData.content.image}
@@ -524,6 +631,8 @@ console.log(content)
         </div>
       )}
 
+      {/* Animated project title (currently commented out) */}
+      {/*
       {projectTitle && (
         <div className="fixed backdrop-blur-sm bg-black/50 bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none z-[10000]">
           <div className="text-white text-4xl font-bold uppercase tracking-tight">
@@ -534,7 +643,9 @@ console.log(content)
           </div>
         </div>
       )}
+      */}
 
+      {/* Global page vignette effect */}
       <div className="fixed inset-0 pointer-events-none z-20">
         <div
           className="absolute inset-0"

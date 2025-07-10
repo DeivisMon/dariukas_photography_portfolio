@@ -19,8 +19,7 @@ export default function Index() {
               transition: { duration: 0.8, delay: 0.2 },
             }}
             onAnimationComplete={() => setAnimationComplete(true)}
-  className={`text-[12rem] absolute text-white ${animationComplete ? '' : 'z-102'}`}
->
+  className={`text-[12rem] absolute text-white ${animationComplete ? '' : 'z-102'}`}>
             Index
           </M.p>
         </div>
@@ -34,3 +33,4 @@ export default function Index() {
     </>
   );
 }
+
