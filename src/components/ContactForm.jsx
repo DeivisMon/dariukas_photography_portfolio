@@ -22,7 +22,7 @@ export default function ContactFrom() {
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.8 } }}
       exit={{ opacity: 1, y: -50, transition: { duration: 0.5 } }}
-      className="relative w-full sm:w-4/5 md:w-5/6 max-w-6xl h-[80vh] md:h-[70vh] overflow-hidden shadow-xl flex flex-col md:flex-row z-100"
+      className="relative w-full sm:w-4/5 md:w-5/6 max-w-6xl h-[80vh] md:h-[70vh] overflow-hidden shadow-xl flex flex-col md:flex-row z-100 my-8"
     >
       {/* Slankiojantis Image */}
       <div

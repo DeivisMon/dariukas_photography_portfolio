@@ -22,18 +22,17 @@ const DraggableGallery = () => {
     src: `https://picsum.photos/1000/750?random=${i + 1}`
   }));
 
-  // Extracts image URLs and project types from the imported JSON data.
+  // // Extracts image URLs and project types from the imported JSON data.
   const imageUrls = mockImages.map((image) => image.src);
   // const imageUrls = Images.map((image) => image.src); // This would be used with the actual data
   const imageProjectTypes = Images.map((image) => image.projectType);
 
-  // State for managing the visibility of a settings panel.
-  const [panelVisible, setPanelVisible] = useState(false);
   // State to track if an item is currently expanded (zoomed in).
   const [isExpanded, setIsExpanded] = useState(false);
   // State to store the data of the currently active/expanded item.
   const [activeItemData, setActiveItemData] = useState(null);
   // State for the title of the project being displayed.
+  // eslint-disable-next-line no-unused-vars
   const [projectTitle, setProjectTitle] = useState('');
   // State for the opacity of the background overlay when an item is expanded.
   const [overlayOpacity, setOverlayOpacity] = useState(0);
@@ -506,11 +505,11 @@ const handleMouseUp = useCallback(() => {
 
   const pos = positionRef.current;
   const velocityX = dragRef.current.velocityX;
-  const momentumMultiplier = 200; // You can tweak this value for stronger fling effect
+  const momentum = 250; // You can tweak this value for stronger fling effect
   const padding = -30; // Optional: how much space you want between the column's start and the center
 
   // Apply momentum to the target position
-  pos.targetX += velocityX * momentumMultiplier;
+  pos.targetX += velocityX * momentum;
 
   // Snap after momentum by calculating nearest column start to center + padding
   const columnIndex = Math.round((-pos.targetX + (window.innerWidth / 2) - padding) / cellWidth);
@@ -648,7 +647,7 @@ const handleMouseUp = useCallback(() => {
       */}
 
       {/* Global page vignette effect */}
-      <div className="fixed inset-0 pointer-events-none z-20">
+      {/* <div className="fixed inset-0 pointer-events-none z-20">
         <div
           className="absolute inset-0"
           style={{
@@ -667,7 +666,7 @@ const handleMouseUp = useCallback(() => {
             boxShadow: `inset 0 0 ${settings.pageVignetteSize * 0.4}px rgba(0,0,0,${settings.vignetteStrength})`
           }}
         />
-      </div>
+      </div> */}
     </div>
   );
 };
