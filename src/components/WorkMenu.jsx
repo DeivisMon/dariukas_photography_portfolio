@@ -2,6 +2,7 @@ import React from "react";
 import "../assets/styles/WorkMenu.css";
 import { gsap } from "gsap";
 import { motion as M } from "framer-motion";
+import { BsArrowUpRightSquare, BsArrowDownLeftSquare } from "react-icons/bs";
 
 export default function WorkMenu({ items = [] }) {
   return (
@@ -101,13 +102,16 @@ function MenuItem({ link, text, image }) {
   const repeatedMarqueeContent = Array.from({ length: 1 }).map((_, idx) => (
     <React.Fragment key={idx}>
       <div className="flex items-center w-full justify-between">
-        <span className="flex items-center px-8">{text}</span>
+        <span className="flex justify-start text-white w-[60%] px-8">
+          <a className="">{text}</a>
+        </span>
         <div className="marquee__img flex items-center justify-center">
           <img src={image} alt="" />
           <img src={image} alt="" />
-          <img src={image} alt="" />
-          <img src={image} alt="" />
         </div>
+        <span className="text-white px-7">
+          <BsArrowDownLeftSquare size={200} />
+        </span>
       </div>
     </React.Fragment>
   ));
@@ -121,7 +125,10 @@ function MenuItem({ link, text, image }) {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <a className="menu__item-link px-7">{text}</a>
+      <span className="flex items-center text-white w-full justify-between px-7">
+        <a className="menu__item-link ">{text}</a>
+        <BsArrowUpRightSquare size={200} />
+      </span>
       <div className="marquee" ref={marqueeRef}>
         <div className="marquee__inner-wrap" ref={marqueeInnerRef}>
           <div className="marquee__inner" aria-hidden="true">

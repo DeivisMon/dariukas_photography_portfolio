@@ -71,10 +71,10 @@
   line-height: 1.2;
 }
 
-.marquee__img {
-  width: 200px;
-  height: 7vh;
-  margin: 2em;
+.marquee__img img {
+  max-width: 200px;
+  height: 100%;
+  /* margin: 2em; */
 }
 
 .menu__item:hover+.marquee {
