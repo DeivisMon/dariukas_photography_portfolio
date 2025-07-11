@@ -1,6 +1,7 @@
 import React from 'react';
 import '../assets/styles/WorkMenu.css';
 import { gsap } from 'gsap';
+import { motion as M } from 'framer-motion';
 
 
 export default function WorkMenu({ items = [] }) {
@@ -61,23 +62,34 @@ function MenuItem({ link, text, image }) {
 
   const repeatedMarqueeContent = Array.from({ length: 1 }).map((_, idx) => (
     <React.Fragment key={idx}>
-      <span className='flex justify-center items-center' >{text}</span>
-      <div
-        className="marquee__img"
-        // style={{ backgroundImage: `url(${image})` }}
-      >
-        <img src={image} alt="" />
-        <img src={image} alt="" />
-        <img src={image} alt="" />
-        <img src={image} alt="" />
-      </div>
+        <div className="flex items-center justify-between">
+            <span className='flex justify-center items-center px-8' >{text}</span>
+            <div
+                className="marquee__img flex items-center justify-center"
+                // style={{ backgroundImage: `url(${image})` }}
+            >
+                <img src={image} alt="" />
+            </div>
+        </div>
     </React.Fragment>
   ));
 
+  const intoView = {
+    initial: { opacity: 0, y: 200 },
+    animate: { opacity: 1, y: 0 },
+    exit: { opacity: 0 },
+    transition: {
+      duration: 0.5,
+      ease: 'easeInOut',
+    },
+  };
+  
+
   return (
-    <div className="menu__item" ref={itemRef}>
+    <M.div variants={intoView} className="menu__item group flex items-center" ref={itemRef}>
+      <div className='text-[6vh] mx-2 opacity-0 group-hover:opacity-100 group-hover:animate-ping transition ease-in-out duration-200'>{'>>'}</div>
       <a
-        className="menu__item-link"
+        className="menu__item-link px-7"
         href={link}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
@@ -91,7 +103,7 @@ function MenuItem({ link, text, image }) {
           </div>
         </div>
       </div>
-    </div>
+    </M.div>
   );
 }
 

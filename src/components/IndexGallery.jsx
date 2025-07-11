@@ -251,6 +251,7 @@ const DraggableGallery = () => {
 
     currentVisibleItemIds.current = nextVisibleItemIds;
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.bufferZone, cellWidth, cellHeight, settings.borderRadius, settings.hoverScale, settings.vignetteSize, isExpanded, activeItemData]);
 
   /**

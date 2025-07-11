@@ -16,7 +16,7 @@ body::-webkit-scrollbar {
 body {
     font-family: "Roboto", sans-serif;
     text-transform: uppercase;
-    font-weight: 500;
+    font-weight: 200;
     background-color: rgba(0, 0, 0, 0.900);
     color: rgba(255, 239, 211, 0.8);
 }

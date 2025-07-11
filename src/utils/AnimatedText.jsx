@@ -95,7 +95,7 @@ const AnimatedText = ({
                   }}
                   className="inline-block"
                   transition={{
-                    duration: 0.18,
+                    duration: 0.25,
                     ease: "easeInOut",
                     delay: hoverStagger * i,
                   }}
