@@ -50,19 +50,19 @@ const AnimatedText = ({
         whileHover={enableHover ? "hover" : undefined}
       >
         {/* Main text with entry animation */}
-        <span className="block">
+        <span className="flex">
           {text.split("").map((char, i) => (
             <M.span
               key={`main-${char}-${i}`}
-              className="block overflow-hidden relative"
-              style={{ display: "inline-block", lineHeight: "1em" }}
+              className="overflow-hidden relative"
+              style={{ display: "inline-block" }}
             >
               <M.span
                 variants={{
                   ...letter,
                   hover: enableHover ? { y: "-100%" } : {},
                 }}
-                className="inline-block"
+                className="inline-block text-[#ffefd3]  mix-blend-difference"
                 transition={{
                   ...letter.show.transition,
                   ...(enableHover && {
@@ -84,8 +84,8 @@ const AnimatedText = ({
             {text.split("").map((char, i) => (
               <M.span
                 key={`hover-${char}-${i}`}
-                className="block overflow-hidden"
-                style={{ display: "inline-block", lineHeight: "1em" }}
+                className="overflow-hidden"
+                style={{ display: "inline-block" }}
               >
                 <M.span
                   variants={{
@@ -93,7 +93,7 @@ const AnimatedText = ({
                     show: { y: "100%" },
                     hover: { y: 0 },
                   }}
-                  className="inline-block"
+                  className="inline-block text-[#ffefd3] mix-blend-difference"
                   transition={{
                     duration: 0.25,
                     ease: "easeInOut",
