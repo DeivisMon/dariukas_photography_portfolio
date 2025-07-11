@@ -7,15 +7,15 @@ export default function WorkMenu({ items = [] }) {
   return (
     <div className="w-full relative z-100">
       <M.nav
-  variants={containerVariants}
-  initial="hidden"
-  animate="show"
-  className=""
->
-  {items.map((item, idx) => (
-    <MenuItem key={idx} {...item} />
-  ))}
-</M.nav>
+        variants={containerVariants}
+        initial="hidden"
+        animate="show"
+        className=""
+      >
+        {items.map((item, idx) => (
+          <MenuItem key={idx} {...item} />
+        ))}
+      </M.nav>
     </div>
   );
 }
@@ -24,7 +24,7 @@ const containerVariants = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.25, // Adjust as needed
+      staggerChildren: 0.25,
       delayChildren: 0.7,
     },
   },
@@ -47,7 +47,7 @@ const itemVariants = {
       duration: 0.5,
       ease: "easeIn",
     },
-  },    
+  },
 };
 
 function MenuItem({ link, text, image }) {
@@ -112,11 +112,9 @@ function MenuItem({ link, text, image }) {
     </React.Fragment>
   ));
 
-  
-
   return (
     <M.div
-        variants={itemVariants}
+      variants={itemVariants}
       className="menu__item flex items-center overflow-hidden h-30"
       ref={itemRef}
       href={link}
