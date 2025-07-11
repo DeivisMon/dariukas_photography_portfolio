@@ -1,20 +1,7 @@
-/**
- * @file DraggableGallery.jsx
- * @description A highly interactive, draggable, and zoomable image gallery component for React.
- * It renders a virtualized grid of images that can be freely dragged around.
- * Images can be clicked to expand into a centered view with a background overlay.
- * The gallery uses direct DOM manipulation within a React component for performance-critical animations.
- */
-
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Images from "../data/images.json";
-import AnimatedText from '../utils/AnimatedText';
-import { gallerySettings as defaultSettings } from '../data/galleryConfig.js';
+import { gallerySettings as defaultSettings } from '../data/GalleryConfig.js';
 
-/**
- * A draggable and zoomable image gallery component.
- * @returns {JSX.Element} The rendered gallery component.
- */
 const DraggableGallery = () => {
 
   // Mocks image data for development purposes.
@@ -22,21 +9,14 @@ const DraggableGallery = () => {
     src: `https://picsum.photos/1000/750?random=${i + 1}`
   }));
 
-  // // Extracts image URLs and project types from the imported JSON data.
   const imageUrls = mockImages.map((image) => image.src);
-  // const imageUrls = Images.map((image) => image.src); // This would be used with the actual data
+  // const imageUrls = Images.map((image) => image.src); 
   const imageProjectTypes = Images.map((image) => image.projectType);
-
-  // State to track if an item is currently expanded (zoomed in).
   const [isExpanded, setIsExpanded] = useState(false);
-  // State to store the data of the currently active/expanded item.
   const [activeItemData, setActiveItemData] = useState(null);
-  // State for the title of the project being displayed.
   // eslint-disable-next-line no-unused-vars
   const [projectTitle, setProjectTitle] = useState('');
-  // State for the opacity of the background overlay when an item is expanded.
   const [overlayOpacity, setOverlayOpacity] = useState(0);
-
   const [settings, setSettings] = useState(defaultSettings);
 
   // Recalculate settings on window resize for responsiveness.
@@ -78,7 +58,7 @@ const DraggableGallery = () => {
   // Grid layout settings.
   const { columns } = settings;
   const itemSizes = [
-    { width: settings.baseWidth, height: settings.smallHeight },
+    // { width: settings.baseWidth, height: settings.smallHeight },
     { width: settings.baseWidth, height: settings.largeHeight }
   ];
   const cellWidth = settings.baseWidth + settings.itemGap;
@@ -102,6 +82,10 @@ const DraggableGallery = () => {
     const hash = ((row * columns + col) % itemSizes.length + itemSizes.length) % itemSizes.length;
     return itemSizes[hash];
   };
+
+//   const getItemSize = () => {
+//   return { width: 450, height: 500 }; // fixed size for all items
+// };
 
   /**
    * Gets the content (image, title, etc.) for an item based on its row and column.
@@ -522,8 +506,6 @@ const handleMouseUp = useCallback(() => {
 
 }, [cellWidth]);
 
-
-
   /**
    * Handles the mouse wheel event to scroll the gallery.
    * @param {WheelEvent} e - The wheel event.
@@ -533,7 +515,6 @@ const handleMouseUp = useCallback(() => {
     positionRef.current.targetX -= e.deltaX * settings.scrollFactor;
     positionRef.current.targetY -= e.deltaY * settings.scrollFactor;
   }, [isExpanded, settings.scrollFactor]);
-
 
   /**
    * Handles clicks on the document, used to close the expanded item when clicking outside of it.
@@ -632,42 +613,6 @@ const handleMouseUp = useCallback(() => {
           />
         </div>
       )}
-
-      {/* Animated project title (currently commented out) */}
-      {/*
-      {projectTitle && (
-        <div className="fixed backdrop-blur-sm bg-black/50 bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full text-center pointer-events-none z-[10000]">
-          <div className="text-white text-4xl font-bold uppercase tracking-tight">
-            <AnimatedText text={projectTitle} duration={0.1} />
-          </div>
-          <div className="text-white text-2xl font-bold uppercase tracking-tight">
-            <AnimatedText text={`#${activeItemData.content.number.toString().padStart(5, '0')}`} duration={0.2} />
-          </div>
-        </div>
-      )}
-      */}
-
-      {/* Global page vignette effect */}
-      {/* <div className="fixed inset-0 pointer-events-none z-20">
-        <div
-          className="absolute inset-0"
-          style={{
-            boxShadow: `inset 0 0 ${settings.pageVignetteSize * 1.5}px rgba(0,0,0,${settings.vignetteStrength * 0.7})`
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            boxShadow: `inset 0 0 ${settings.pageVignetteSize * 0.75}px rgba(0,0,0,${settings.vignetteStrength * 0.85})`
-          }}
-        />
-        <div
-          className="absolute inset-0"
-          style={{
-            boxShadow: `inset 0 0 ${settings.pageVignetteSize * 0.4}px rgba(0,0,0,${settings.vignetteStrength})`
-          }}
-        />
-      </div> */}
     </div>
   );
 };

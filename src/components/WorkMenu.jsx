@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import "../assets/styles/WorkMenu.css";
 import { gsap } from "gsap";
 import { motion as M } from "framer-motion";
@@ -11,7 +11,6 @@ export default function WorkMenu({ items = [] }) {
         variants={containerVariants}
         initial="hidden"
         animate="show"
-        className=""
       >
         {items.map((item, idx) => (
           <MenuItem key={idx} {...item} />
@@ -52,10 +51,10 @@ const itemVariants = {
 };
 
 function MenuItem({ link, text, image }) {
-  const itemRef = React.useRef(null);
-  const marqueeRef = React.useRef(null);
-  const marqueeInnerRef = React.useRef(null);
-
+  const itemRef = useRef(null);
+  const marqueeRef = useRef(null);
+  const marqueeInnerRef = useRef(null);
+  const marqueeImageRef = useRef(null);
   const animationDefaults = { duration: 0.6, ease: "expo" };
 
   const findClosestEdge = (mouseX, mouseY, width, height) => {
@@ -82,7 +81,13 @@ function MenuItem({ link, text, image }) {
       .timeline({ defaults: animationDefaults })
       .set(marqueeRef.current, { y: edge === "top" ? "-101%" : "101%" }, 0)
       .set(marqueeInnerRef.current, { y: edge === "top" ? "101%" : "-101%" }, 0)
-      .to([marqueeRef.current, marqueeInnerRef.current], { y: "0%" }, 0);
+      .to([marqueeRef.current, marqueeInnerRef.current], { y: "0%" }, 0)
+      .fromTo(
+        marqueeImageRef.current,
+        { x: -50, opacity: 0 },
+        { x: 0, opacity: 1, duration: 0.4, ease: "expo.out" },
+        0.1
+      );
   };
 
   const handleMouseLeave = (ev) => {
@@ -96,36 +101,48 @@ function MenuItem({ link, text, image }) {
     gsap
       .timeline({ defaults: animationDefaults })
       .to(marqueeRef.current, { y: edge === "top" ? "-101%" : "101%" }, 0)
-      .to(marqueeInnerRef.current, { y: edge === "top" ? "101%" : "-101%" }, 0);
+      .to(marqueeInnerRef.current, { y: edge === "top" ? "101%" : "-101%" }, 0)
+      .to(
+        marqueeImageRef.current,
+        { x: -50, opacity: 0, duration: 0.2, ease: "expo.in" },
+        0
+      );
   };
 
   const repeatedMarqueeContent = Array.from({ length: 1 }).map((_, idx) => (
     <React.Fragment key={idx}>
-      <div className="flex items-center w-full justify-between">
-        <span className="flex justify-start text-white w-[60%] px-8">
+      <M.div
+        className="flex items-center w-full justify-between"
+        initial="hidden"
+        animate="show"
+      >
+        <span className="flex justify-start  w-[60%] px-8">
           <a className="">{text}</a>
         </span>
-        <div className="marquee__img flex items-center justify-center">
+        <div
+          ref={marqueeImageRef}
+          className="marquee__img flex items-center justify-center z-1000" 
+        >
           <img src={image} alt="" />
           <img src={image} alt="" />
         </div>
-        <span className="text-white px-7">
+        <span className="px-7">
           <BsArrowDownLeftSquare size={200} />
         </span>
-      </div>
+      </M.div>
     </React.Fragment>
   ));
 
   return (
     <M.div
       variants={itemVariants}
-      className="menu__item flex items-center overflow-hidden h-30"
+      className="menu__item flex items-center h-30"
       ref={itemRef}
       href={link}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <span className="flex items-center text-white w-full justify-between px-7">
+      <span className="flex items-center w-full justify-between px-7">
         <a className="menu__item-link ">{text}</a>
         <BsArrowUpRightSquare size={200} />
       </span>

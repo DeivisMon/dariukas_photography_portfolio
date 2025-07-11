@@ -62,7 +62,7 @@ const AnimatedText = ({
                   ...letter,
                   hover: enableHover ? { y: "-100%" } : {},
                 }}
-                className="inline-block text-[#ffefd3]  mix-blend-difference"
+                className="inline-block text-[#ffefd3]"
                 transition={{
                   ...letter.show.transition,
                   ...(enableHover && {
@@ -93,7 +93,7 @@ const AnimatedText = ({
                     show: { y: "100%" },
                     hover: { y: 0 },
                   }}
-                  className="inline-block text-[#ffefd3] mix-blend-difference"
+                  className="inline-block text-[#ffefd3"
                   transition={{
                     duration: 0.25,
                     ease: "easeInOut",
