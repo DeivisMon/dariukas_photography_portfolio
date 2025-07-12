@@ -28,10 +28,6 @@
   color: #060010;
 }
 
-.menu__item-link:focus:not(:focus-visible) {
-  /* color: #fff; */
-}
-
 .marquee {
   position: absolute;
   top: 0;
@@ -69,12 +65,6 @@
   font-size: 20vh;
   font-weight: 600;
   line-height: 1.2;
-}
-
-.marquee__img img {
-  max-width: 200px;
-  height: 150%;
-  /* margin: 2em; */
 }
 
 .menu__item:hover+.marquee {

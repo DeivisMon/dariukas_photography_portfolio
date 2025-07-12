@@ -50,7 +50,7 @@ function MenuItem({ link, text, image }) {
   const itemRef = useRef(null);
   const marqueeRef = useRef(null);
   const marqueeInnerRef = useRef(null);
-  const sliceImageRef = useRef([]);
+  const sliceRef = useRef([]);
   const animationDefaults = { duration: 0.6, ease: "expo" };
 
   const findClosestEdge = (mouseX, mouseY, width, height) => {
@@ -78,7 +78,7 @@ function MenuItem({ link, text, image }) {
       .set(marqueeRef.current, { y: edge === "top" ? "-101%" : "101%" }, 0)
       .set(marqueeInnerRef.current, { y: edge === "top" ? "101%" : "-101%" }, 0)
       .to(
-        sliceImageRef.current,
+        sliceRef.current,
         {
           xPercent: 100,
           scaleX: 0,
@@ -105,7 +105,7 @@ function MenuItem({ link, text, image }) {
     gsap
       .timeline({ defaults: animationDefaults })
       .to(
-        sliceImageRef.current,
+        sliceRef.current,
         {
           xPercent: 0,
           scaleX: 1,
@@ -122,39 +122,39 @@ function MenuItem({ link, text, image }) {
       .to(marqueeInnerRef.current, { y: edge === "top" ? "101%" : "-101%" }, 0)
   };
 
-  const picSlices = 12;
+  const slices = 24;
 
   const repeatedMarqueeContent = Array.from({ length: 1 }).map((_, idx) => (
     <React.Fragment key={idx}>
       <M.div
-        className="flex items-center w-full justify-between"
+        className="flex relative items-center w-full justify-between"
         initial="hidden"
         animate="show"
       >
-        <span className="flex justify-start  w-[70%] px-8">
-          <a className="">{text}</a>
+        {Array.from({ length: slices }).map((_, i) => (
+          <div
+            key={i}
+            className="absolute top-0 h-full bg-white"
+            style={{
+              width: `${100 / slices}%`,
+              left: `${(100 / slices) * i}%`,
+              zIndex: 100,
+            }}
+            ref={(el) => {
+              if (el) sliceRef.current[i] = el;
+            }}
+          />
+        ))}
+        <span className="flex justify-start  w-[100%] px-8">
+          <a>{text}</a>
         </span>
         <div
           className="marquee__img relative"
-          style={{ width: "300px", height: "200px", overflow: "hidden" }}
+          style={{ width: "500px", height: "400px" }}
         >
           <img className="w-full h-full object-cover" src={image} alt="" />
-          {Array.from({ length: picSlices }).map((_, i) => (
-            <div
-              key={i}
-              className="absolute top-0 h-full bg-white"
-              style={{
-                width: `${100 / picSlices}%`,
-                right: `${(100 / picSlices) * i}%`,
-                zIndex: 1000,
-              }}
-              ref={(el) => {
-                if (el) sliceImageRef.current[i] = el;
-              }}
-            />
-          ))}
         </div>
-        <span className="px-7">
+        <span className="relative  px-7 z-101">
           <BsArrowDownLeftSquare size={200} />
         </span>
       </M.div>

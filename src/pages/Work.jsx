@@ -1,5 +1,6 @@
 import NavBar from "../components/NavBar";
 import WorkMenu from "../components/WorkMenu";
+import Footer from "../components/Footer";
 import { motion as M } from "framer-motion";
 
 const mockImages = Array.from({ length: 30 }, (_, i) => ({
@@ -42,6 +43,7 @@ export default function Work() {
         <WorkMenu items={workLinks} />
       </M.div>
       </div>
+      <Footer />
     </>
   );
 }
