@@ -10,7 +10,7 @@ export const gallerySettings = {
   momentumFactor: 200,
   scrollFactor: 1.5,
   bufferZone: 3,
-  borderRadius: 4, // in pixels
+  borderRadius: 1, // in pixels
   vignetteSize: 50,
   vignetteStrength: 0.7,
   pageVignetteSize: 200,

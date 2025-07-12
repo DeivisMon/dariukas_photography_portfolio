@@ -149,7 +149,7 @@ function MenuItem({ link, text, image }) {
         <div
           key={i}
           ref={(el) => setSliceRef(el, i)}
-          className="absolute top-0 h-full bg-white"
+          className="absolute top-0 h-full bg-[#FFEFD3]"
           style={{
             width: `${100 / slices}%`,
             left: `${(100 / slices) * i}%`,
@@ -175,7 +175,7 @@ function MenuItem({ link, text, image }) {
   return (
     <M.div
       variants={itemVariants}
-      className="menu__item flex items-center h-30"
+      className="menu__item flex items-center h-30 cursor-pointer"
       ref={itemRef}
       href={link}
       onMouseEnter={handleMouseEnter}
