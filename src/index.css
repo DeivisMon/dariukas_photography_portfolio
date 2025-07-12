@@ -1,7 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
 @import "tailwindcss";
 
-/* This hides scrollbar for all browsers */
+/* hide scrollbar for all browsers */
 html {
   overflow: -moz-scrollbar-none; /* Old Firefox */
   scrollbar-width: none; /* New Firefox */
@@ -17,6 +17,7 @@ body {
     font-family: "Roboto", sans-serif;
     text-transform: uppercase;
     font-weight: 200;
-    background-color: rgba(0, 0, 0, 0.900);
+    background-color: rgba(0, 0, 0, 0.850);
     color: rgb(255, 239, 211);
 }
+

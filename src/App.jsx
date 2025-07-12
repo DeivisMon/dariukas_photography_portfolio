@@ -1,8 +1,8 @@
 import { Routes, Route, useLocation } from "react-router-dom"
+import { AnimatePresence } from "framer-motion"
 import Index from "./pages/Index"
 import Work from "./pages/Work"
 import Contact from "./pages/Contact"
-import { AnimatePresence } from "framer-motion"
 import PageTransitions from "./components/PageTransitions"
 
 export default function App() {

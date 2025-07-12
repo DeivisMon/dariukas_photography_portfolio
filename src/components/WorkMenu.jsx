@@ -7,11 +7,7 @@ import { BsArrowUpRightSquare, BsArrowDownLeftSquare } from "react-icons/bs";
 export default function WorkMenu({ items = [] }) {
   return (
     <div className="w-full relative z-100">
-      <M.nav
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-      >
+      <M.nav variants={containerVariants} initial="hidden" animate="show">
         {items.map((item, idx) => (
           <MenuItem key={idx} {...item} />
         ))}
@@ -24,8 +20,8 @@ const containerVariants = {
   hidden: {},
   show: {
     transition: {
-      staggerChildren: 0.25,
-      delayChildren: 0.7,
+      staggerChildren: 0.2,
+      delayChildren: 0.6,
     },
   },
 };
@@ -54,7 +50,7 @@ function MenuItem({ link, text, image }) {
   const itemRef = useRef(null);
   const marqueeRef = useRef(null);
   const marqueeInnerRef = useRef(null);
-  const marqueeImageRef = useRef(null);
+  const sliceImageRef = useRef([]);
   const animationDefaults = { duration: 0.6, ease: "expo" };
 
   const findClosestEdge = (mouseX, mouseY, width, height) => {
@@ -81,13 +77,21 @@ function MenuItem({ link, text, image }) {
       .timeline({ defaults: animationDefaults })
       .set(marqueeRef.current, { y: edge === "top" ? "-101%" : "101%" }, 0)
       .set(marqueeInnerRef.current, { y: edge === "top" ? "101%" : "-101%" }, 0)
+      .to(
+        sliceImageRef.current,
+        {
+          xPercent: 100,
+          scaleX: 0,
+          stagger: {
+            amount: 0.5,
+            from: "start",
+          },
+          // duration: 0.5,
+          // ease: "expo.out",
+        },
+        0
+      )
       .to([marqueeRef.current, marqueeInnerRef.current], { y: "0%" }, 0)
-      .fromTo(
-        marqueeImageRef.current,
-        { x: -50, opacity: 0 },
-        { x: 0, opacity: 1, duration: 0.4, ease: "expo.out" },
-        0.1
-      );
   };
 
   const handleMouseLeave = (ev) => {
@@ -100,14 +104,25 @@ function MenuItem({ link, text, image }) {
 
     gsap
       .timeline({ defaults: animationDefaults })
+      .to(
+        sliceImageRef.current,
+        {
+          xPercent: 0,
+          scaleX: 1,
+          // duration: 0.05,
+          // ease: "expo.inOut",
+          stagger: {
+            amount: 0.05,
+            from: "end",
+          },
+        },
+        0
+      )
       .to(marqueeRef.current, { y: edge === "top" ? "-101%" : "101%" }, 0)
       .to(marqueeInnerRef.current, { y: edge === "top" ? "101%" : "-101%" }, 0)
-      .to(
-        marqueeImageRef.current,
-        { x: -50, opacity: 0, duration: 0.2, ease: "expo.in" },
-        0
-      );
   };
+
+  const picSlices = 12;
 
   const repeatedMarqueeContent = Array.from({ length: 1 }).map((_, idx) => (
     <React.Fragment key={idx}>
@@ -116,15 +131,28 @@ function MenuItem({ link, text, image }) {
         initial="hidden"
         animate="show"
       >
-        <span className="flex justify-start  w-[60%] px-8">
+        <span className="flex justify-start  w-[70%] px-8">
           <a className="">{text}</a>
         </span>
         <div
-          ref={marqueeImageRef}
-          className="marquee__img flex items-center justify-center z-1000" 
+          className="marquee__img relative"
+          style={{ width: "300px", height: "200px", overflow: "hidden" }}
         >
-          <img src={image} alt="" />
-          <img src={image} alt="" />
+          <img className="w-full h-full object-cover" src={image} alt="" />
+          {Array.from({ length: picSlices }).map((_, i) => (
+            <div
+              key={i}
+              className="absolute top-0 h-full bg-white"
+              style={{
+                width: `${100 / picSlices}%`,
+                right: `${(100 / picSlices) * i}%`,
+                zIndex: 1000,
+              }}
+              ref={(el) => {
+                if (el) sliceImageRef.current[i] = el;
+              }}
+            />
+          ))}
         </div>
         <span className="px-7">
           <BsArrowDownLeftSquare size={200} />

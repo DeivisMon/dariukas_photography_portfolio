@@ -574,7 +574,7 @@ const handleMouseUp = useCallback(() => {
   }, [animate, updateVisibleItems, settings.columns, settings.baseWidth, settings.itemGap]);
 
   return (
-    <div className="fixed inset-0 bg-black text-white overflow-hidden font-sans select-none z-101">
+    <div className="fixed inset-0 text-white overflow-hidden font-sans select-none z-101">
 
       <div
         ref={containerRef}
