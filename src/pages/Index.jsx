@@ -1,6 +1,8 @@
 import { useState } from "react";
-import NavBar from "../components/NavBar";
 import { motion as M } from "framer-motion";
+import NavBar from "../components/NavBar";
+import CenterMenu from "../components/CenterMenu";
+import Footer from "../components/Footer";
 import DraggableGallery from "../components/IndexGallery";
 
 export default function Index() {
@@ -9,6 +11,7 @@ export default function Index() {
   return (
     <>
       <NavBar />
+      <CenterMenu />
       <div className="font-bold flex flex-col items-center justify-center h-screen w-screen">
         <div className="relative font-bold flex items-center justify-center h-screen w-screen no-repeat bg-cover">
           <M.p
@@ -34,6 +37,7 @@ export default function Index() {
           <DraggableGallery />
         </M.div>
       </div>
+      <Footer />
     </>
   );
 }

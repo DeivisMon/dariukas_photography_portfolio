@@ -13,6 +13,10 @@ body::-webkit-scrollbar {
   display: none; 
 }
 
+::selection {
+  background: transparent;
+}
+
 body {
     font-family: "Roboto", sans-serif;
     text-transform: uppercase;

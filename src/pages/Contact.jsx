@@ -1,5 +1,6 @@
 import NavBar from "../components/NavBar";
 import ContactFrom from "../components/ContactForm";
+import Footer from "../components/Footer";
 import { motion as M } from "framer-motion";
 
 export default function Contact() {
@@ -19,6 +20,7 @@ export default function Contact() {
         </M.p>
         <ContactFrom />
       </div>
+      <Footer />
     </>
   );
 }
