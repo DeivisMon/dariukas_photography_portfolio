@@ -5,12 +5,19 @@ import SocialIcons from "./SocialIcons";
 export default function NavBar() {
 
   return (
-    <div className="navbar fixed top-0 left-0 w-full h-18 flex items-center justify-between bg-[#262626] px-8 z-1000 overflow-hidden">
-      <div className="logo flex-2 h-full flex items-center text-3xl font-light px-4">
-        <Link to="/">
-          <AnimatedText text="Darius Žvinklys"  />
-        </Link>
-      <div className="location flex flex-col items-start flex-1 px-4 text-[0.7rem]">
+    <div className="navbar fixed top-0 left-0 w-full h-18 flex items-center justify-between bg-black px-8 z-1000 overflow-hidden">
+      <div className="logo  flex-2 h-full flex items-center  px-4">
+        <div className="relative flex items-start">
+          <Link to="/">
+          <div className="text-3xl font-light mask-b-from-20% mask-b-to-90%">
+            <AnimatedText text="Darius Žvinklys"  />
+          </div>
+          <span className="absolute left-1/2 top-[35px] -translate-x-1/2 -translate-y-1/2 font-normal opacity-70">
+            <AnimatedText text="Photography" enableHover={false} />
+          </span>
+          </Link>
+        </div>
+      <div className="location flex flex-col items-center flex-1 ml-8 text-[0.7rem]">
         <AnimatedText text="Based in Lithuania," enableHover={false} />
         <AnimatedText text="Klaipėda" enableHover={false} />
       </div>

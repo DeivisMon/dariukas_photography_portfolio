@@ -31,7 +31,7 @@ export default function WorkMenu({ items = [] }) {
     if (target) {
       gsap.to(target, {
         yPercent: 10,
-        scale: 0.05,
+        scaleY: 0.05,
         opacity: 0,
         zIndex: 999,
         duration: 0.6,
@@ -57,7 +57,7 @@ const handleClose = () => {
   if (target) {
     gsap.to(target, {
       yPercent: 0,
-      scale: 1,
+      scaleY: 1,
       opacity: 1,
       top: 0,
       left: 0,
@@ -203,7 +203,7 @@ const MenuItem = React.forwardRef(function MenuItem(
           {
             xPercent: 100,
             scaleX: 0,
-            stagger: { amount: 0.2, from: "start" },
+            stagger: { amount: 0.3, from: "start" },
             overwrite: "auto",
           },
           0
@@ -232,7 +232,7 @@ const MenuItem = React.forwardRef(function MenuItem(
           {
             xPercent: 0,
             scaleX: 1,
-            stagger: { amount: 0.2, from: "end" },
+            stagger: { amount: 0.1, from: "end" },
             overwrite: "auto",
           },
           0
