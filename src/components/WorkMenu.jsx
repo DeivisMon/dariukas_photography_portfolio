@@ -1,17 +1,127 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import "../assets/styles/WorkMenu.css";
 import { gsap } from "gsap";
 import { motion as M } from "framer-motion";
 import { BsArrowUpRightSquare, BsArrowDownLeftSquare } from "react-icons/bs";
+import { GoArrowDownLeft, GoArrowUpRight } from "react-icons/go";
 
 export default function WorkMenu({ items = [] }) {
+  const [activeIndex, setActiveIndex] = useState(null);
+  const menuRefs = useRef([]);
+  const closeRef = useRef(null);
+
+  console.log("menuActive", activeIndex); 
+
+  const handleActivate = (index) => {
+    setActiveIndex(index);
+
+    menuRefs.current.forEach((el, i) => {
+      if (!el) return;
+      if (i !== index) {
+        gsap.to(el, {
+          rotateX: 90,
+          opacity: 0,
+          duration: 0.5,
+          ease: "power2.inOut",
+        });
+      }
+    });
+
+    const target = menuRefs.current[index];
+    if (target) {
+      gsap.to(target, {
+        yPercent: 10,
+        scale: 0.05,
+        opacity: 0,
+        zIndex: 999,
+        duration: 0.6,
+        delay: 0.6,
+        ease: "power3.out",
+      });
+    }
+
+    gsap.delayedCall(0.8, () => {
+      if (closeRef.current) {
+        gsap.fromTo(
+          closeRef.current,
+          { yPercent: -50, opacity: 0 },
+          { yPercent: 0, opacity: 1, duration: 0.5, ease: "power3.out" }
+        );
+      }
+    });
+  };
+
+const handleClose = () => {
+  const target = menuRefs.current[activeIndex];
+
+  if (target) {
+    gsap.to(target, {
+      yPercent: 0,
+      scale: 1,
+      opacity: 1,
+      top: 0,
+      left: 0,
+      position: "relative",
+      zIndex: 1,
+      duration: 0.6,
+      delay: 0.6,
+      ease: "power3.inOut",
+      onComplete: () => {
+        // Now we can clear props and reset state
+        gsap.set(target, { clearProps: "all" });
+        setActiveIndex(null);
+      },
+    });
+  }
+
+  // Restore others
+  menuRefs.current.forEach((el, i) => {
+    if (i !== activeIndex && el) {
+      gsap.to(el, {
+        rotateX: 0,
+        opacity: 1,
+        duration: 0.5,
+        ease: "power2.out",
+        delay: 0.2 + i * 0.05, // optional stagger
+      });
+    }
+  });
+
+  if (closeRef.current) {
+  gsap.to(closeRef.current, {
+    yPercent: -50,
+    opacity: 0,
+    duration: 0.3,
+    ease: "power3.in",
+  });
+}
+};
+
+
   return (
     <div className="w-full relative z-100">
       <M.nav variants={containerVariants} initial="hidden" animate="show">
         {items.map((item, idx) => (
-          <MenuItem key={idx} {...item} />
+          <MenuItem
+            key={idx}
+            {...item}
+            idx={idx}
+            ref={(el) => (menuRefs.current[idx] = el)}
+            onActivate={() => handleActivate(idx)}
+            isActive={activeIndex === idx}
+            isDimmed={activeIndex !== null && activeIndex !== idx}
+          />
         ))}
       </M.nav>
+      {activeIndex !== null && (
+        <button
+          ref={closeRef}
+          className="fixed top-20 right-15 z-[9999] text-3xl opacity-0 font-thin text-white cursor-pointer"
+          onClick={handleClose}
+        >
+          [close x]
+        </button>
+      )}
     </div>
   );
 }
@@ -40,7 +150,10 @@ const itemVariants = {
   },
 };
 
-function MenuItem({ link, text, image }) {
+const MenuItem = React.forwardRef(function MenuItem(
+  { link, text, image, onActivate, isActive, isDimmed },
+  ref
+) {
   const itemRef = useRef(null);
   const marqueeRef = useRef(null);
   const marqueeInnerRef = useRef(null);
@@ -84,11 +197,7 @@ function MenuItem({ link, text, image }) {
         .timeline({ defaults: animationDefaults })
         .set(marqueeRef.current, { y: edge === "top" ? "-101%" : "101%" }, 0)
         .set(marqueeInnerRef.current, { y: edge === "top" ? "101%" : "-101%" }, 0)
-        .to(
-          [marqueeRef.current, marqueeInnerRef.current],
-          { y: "0%" },
-          0
-        )
+        .to([marqueeRef.current, marqueeInnerRef.current], { y: "0%" }, 0)
         .to(
           sliceRefs.current,
           {
@@ -116,16 +225,8 @@ function MenuItem({ link, text, image }) {
     ctx.current = gsap.context(() => {
       gsap
         .timeline({ defaults: animationDefaults })
-        .to(
-          marqueeRef.current,
-          { y: edge === "top" ? "-101%" : "101%" },
-          0
-        )
-        .to(
-          marqueeInnerRef.current,
-          { y: edge === "top" ? "101%" : "-101%" },
-          0
-        )
+        .to(marqueeRef.current, { y: edge === "top" ? "-101%" : "101%" }, 0)
+        .to(marqueeInnerRef.current, { y: edge === "top" ? "101%" : "-101%" }, 0)
         .to(
           sliceRefs.current,
           {
@@ -160,10 +261,7 @@ function MenuItem({ link, text, image }) {
       <span className="flex justify-start w-full px-8">
         <a>{text}</a>
       </span>
-      <div
-        className="marquee__img relative"
-        style={{ width: "500px", height: "400px" }}
-      >
+      <div className="marquee__img relative" style={{ width: "500px", height: "400px" }}>
         <img className="w-full h-full object-cover" src={image} alt="" />
       </div>
       <span className="relative px-7 z-101">
@@ -176,10 +274,15 @@ function MenuItem({ link, text, image }) {
     <M.div
       variants={itemVariants}
       className="menu__item flex items-center h-30 cursor-pointer"
-      ref={itemRef}
-      href={link}
+      ref={(el) => {
+        itemRef.current = el;
+        if (typeof ref === "function") ref(el);
+        else if (ref) ref.current = el;
+      }}
+      onClick={onActivate}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      style={{ opacity: isDimmed ? 0.4 : 1 }}
     >
       <span className="flex items-center w-full justify-between px-7">
         <a className="menu__item-link">{text}</a>
@@ -194,4 +297,4 @@ function MenuItem({ link, text, image }) {
       </div>
     </M.div>
   );
-}
+});

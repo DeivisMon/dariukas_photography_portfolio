@@ -16,13 +16,14 @@ export default function ContactFrom() {
     if (isContactVisible) return "translate(0, 0)";
     return isMobile ? "translateY(100%)" : "translateX(100%)";
   };
+  
 
   return (
     <Motion.div
       initial={{ opacity: 0, y: -50 }}
       animate={{ opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.8 } }}
       exit={{ opacity: 1, y: -50, transition: { duration: 0.5 } }}
-      className="relative w-full sm:w-4/5 md:w-5/6 max-w-6xl h-[80vh] md:h-[70vh] overflow-hidden shadow-xl flex flex-col md:flex-row z-100 my-8"
+      className="relative w-full h-[80vh] md:h-[80vh] overflow-hidden shadow-xl flex flex-col md:flex-row z-100 my-8"
     >
       {/* Slankiojantis Image */}
       <div
@@ -51,18 +52,18 @@ export default function ContactFrom() {
 
         <div className="w-full flex-1 md:w-1/2 md:h-full flex items-center justify-center bg-gray-400 px-10 min-h-0">
           <form className="flex flex-col lg:gap-2 w-full max-w-sm">
-            <h2 className="text-2xl font-bold lg:mb-4 text-center">Contact Me</h2>
+            <h2 className="text-5xl font-thin lg:mb-4 text-center">Contact Me</h2>
             <input
-              className="p-2 border-b shadow-md rounded-t-md focus:border-indigo-200 focus:outline-none focus:bg-none"
+              className="p-2 border-b rounded-t-md font-thin focus:outline-none focus:bg-none" 
               placeholder="Name"
             />
             <input
-              className="p-2 border-b shadow-md rounded-t-md focus:border-indigo-200 focus:outline-none focus:bg-none"
+              className="p-2 border-b rounded-t-md font-thin focus:outline-none focus:bg-none"
               type="email"
               placeholder="Email"
             />
-            <textarea
-              className="p-2 border-b shadow-md rounded-t-md focus:border-indigo-600 focus:outline-none focus:bg-none"
+            <input
+              className="p-2 border-b rounded-t-md font-thin focus:outline-none focus:bg-none"
               placeholder="Your message"
             />
             <button

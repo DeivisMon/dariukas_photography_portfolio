@@ -43,7 +43,8 @@ export default function SocialIcons() {
           key={id}
           variants={iconVariants}
           whileHover={{ scale: 1.2, transition: { duration: 0.3, ease: "easeInOut" } }}
-          style={{ fontSize: 24, cursor: "pointer", padding: "0 10px" }}
+          className="hover:text-white"
+          style={{ fontSize: 24, cursor: "pointer", padding: "0 10px",  }}
           aria-label={label}
         >
           {icon}

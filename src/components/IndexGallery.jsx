@@ -1,6 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Images from "../data/images.json";
 import { gallerySettings as defaultSettings } from '../data/GalleryConfig.js';
+import { motion as M } from "framer-motion";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 const DraggableGallery = () => {
 
@@ -179,11 +184,13 @@ const DraggableGallery = () => {
           itemElement.style.opacity = isExpanded && activeItemData?.id !== itemId ? 0 : 1;
 
           itemElement.innerHTML = `
-            <div class="group w-full h-full overflow-hidden relative">
+            <div 
+              class="group w-full h-full overflow-hidden relative"
+              >
               <img
                 src="${content.image}"
                 alt="Image ${content.number}"
-                class="w-full h-full grayscale group-hover:grayscale-70 transition duration-500 group-hover:scale-105  object-cover pointer-events-none transition-transform duration-300"
+                class="w-full h-full grayscale group-hover:grayscale-70 transition-all duration-500 group-hover:scale-115 transform transition-transform object-cover pointer-events-none will-change-transform"
                 style="box-shadow: inset 0 0 ${settings.vignetteSize}px rgba(0, 0, 0, 0.5);"
               />
               <div class="opacity-0 group-hover:opacity-100 absolute bg-gray-900/50 transition-opacity duration-300  bottom-0 left-0 w-full p-4 z-10">
@@ -197,6 +204,38 @@ const DraggableGallery = () => {
             </div>
           `;
           canvas.appendChild(itemElement);
+
+          // gsap.fromTo(itemElement, {
+          //   opacity: 0,
+          //   y: 50,
+          // }, {
+          //   opacity: 1,
+          //   y: 0,
+          //   duration: 0.3,
+          //   delay: 2, // you can stagger this per item
+          //   ease: "power2.out",
+          // });
+
+          const imageEl = itemElement.querySelector("img");
+
+        if (imageEl) {
+          gsap.to(imageEl, {
+            y: -300,
+            scale: 1.5,
+            ease: "none",
+            scrollTrigger: {
+              trigger: itemElement,
+              start: "center center",
+              end: "bottom top",
+              scrub: true,
+              // markers: true, // for debugging
+            },
+          });
+        }
+
+        // Refresh ScrollTrigger after adding
+        // ScrollTrigger.refresh();
+          
         } else {
           // If the item already exists, update its properties.
           const opacity = isExpanded && activeItemData?.id !== itemId ? 0 : 1;
@@ -222,6 +261,7 @@ const DraggableGallery = () => {
         }
       }
     }
+    
 
     // Remove items that are no longer visible.
     currentVisibleItemIds.current.forEach(itemId => {
@@ -491,7 +531,7 @@ const handleMouseUp = useCallback(() => {
   const pos = positionRef.current;
   const velocityX = dragRef.current.velocityX;
   const momentum = 250; // You can tweak this value for stronger fling effect
-  const padding = -30; // Optional: how much space you want between the column's start and the center
+  const padding = 0; // Optional: how much space you want between the column's start and the center
 
   // Apply momentum to the target position
   pos.targetX += velocityX * momentum;
@@ -574,7 +614,11 @@ const handleMouseUp = useCallback(() => {
   }, [animate, updateVisibleItems, settings.columns, settings.baseWidth, settings.itemGap]);
 
   return (
-    <div className="fixed inset-0 text-white overflow-hidden font-sans select-none z-100">
+    <M.div 
+      initial={{ opacity: 0, y: -50 }}
+      animate={{ opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.8 } }}
+      exit={{ opacity: 1, y: -50, transition: { duration: 0.5 } }}
+      className="fixed inset-0 text-white overflow-hidden font-sans select-none z-100">
 
       <div
         ref={containerRef}
@@ -613,7 +657,7 @@ const handleMouseUp = useCallback(() => {
           />
         </div>
       )}
-    </div>
+    </M.div>
   );
 };
 

@@ -2,7 +2,7 @@ export const gallerySettings = {
   baseWidth: 420,
   smallHeight: 350,
   largeHeight: 500,
-  itemGap: 60,
+  itemGap: 4,
   columns: 4,
   hoverScale: 1.05,
   expandedScale: 0.9,

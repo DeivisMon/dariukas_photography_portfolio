@@ -9,12 +9,13 @@ export default function Contact() {
       <NavBar />
       <div className="relative font-bold flex flex-col items-center justify-center h-screen w-screen">
         <M.p
+          initial={{ scale: 6, opacity: 0 }}
           animate={{
-            scale: [8, 7, 5, 4, 3, 3],
+            scale: [ 6, 5, 4, 3, 3],
             opacity: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
             transition: { duration: 0.7, delay: 0.05 },
           }}
-          className="text-[12rem] text-shadow-lg absolute text-white z-100 "
+          className="text-[8rem] text-shadow-lg absolute z-100 "
         >
           Contact
         </M.p>

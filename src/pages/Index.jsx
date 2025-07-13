@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { motion as M } from "framer-motion";
 import NavBar from "../components/NavBar";
-import CenterMenu from "../components/CenterMenu";
 import Footer from "../components/Footer";
 import DraggableGallery from "../components/IndexGallery";
+import MasonryGallery from "../components/MasonryGallery";
 
 export default function Index() {
   const [animationComplete, setAnimationComplete] = useState(false);
@@ -11,7 +11,6 @@ export default function Index() {
   return (
     <>
       <NavBar />
-      <CenterMenu />
       <div className="font-bold flex flex-col items-center justify-center h-screen w-screen">
         <div className="relative font-bold flex items-center justify-center h-screen w-screen no-repeat bg-cover">
           <M.p
@@ -29,13 +28,14 @@ export default function Index() {
             Index
           </M.p>
         </div>
-        <M.div
-          initial={{ opacity: 0, y: 50 }}
+        <div
+          initial={{ opacity: 0, y: 500 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
+          transition={{ duration: 0.4, delay: 2 }}
         >
           <DraggableGallery />
-        </M.div>
+          {/* <MasonryGallery /> */}
+        </div>
       </div>
       <Footer />
     </>
