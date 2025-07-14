@@ -22,7 +22,8 @@ body {
     text-transform: uppercase;
     font-weight: 300;
     background-color: rgb(0, 0, 0);
-    color: rgb(255, 239, 211);
+    /* color: rgb(255, 239, 211); */
+    color: white;
 }
 
 .footer::before {
