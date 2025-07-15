@@ -37,3 +37,39 @@ body {
   height: 2px;
   background-color: #000000;
 }
+
+.cursor-image-hover {
+  width: 65px !important;
+  height: 65px !important;
+  background-color: white !important;
+  border: none !important;
+  border-radius: 50%;
+  filter: none;
+  backdrop-filter: none;
+  mix-blend-mode: difference;
+  transition: all 0.3s ease-out;
+  /* animation: cursor-spin 1s linear infinite; */
+}
+
+@keyframes cursor-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.work-menu-item-hover {
+  cursor: crosshair;
+  width: 68px !important;
+  height: 50px !important;
+  background-color: white !important;
+  border: none !important;
+  border-radius: 5%;
+  filter: none;
+  backdrop-filter: none;
+  mix-blend-mode: difference;
+  transition: all 0.1s cubic-bezier(0.61, 1, 0.88, 1);
+  overflow: hidden;
+}

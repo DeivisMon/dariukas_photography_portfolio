@@ -1,21 +1,23 @@
 import { useEffect } from "react";
 
-export function useNavHover(cursorRef) {
+export function useMenuHover(cursorRef) {
   useEffect(() => {
     const cursor = cursorRef.current;
     if (!cursor) return;
 
-
+    const span = cursor.querySelector(".cursor-arrow");
     const bind = () => {
-      const images = document.querySelectorAll(".nav-item");
+      const images = document.querySelectorAll(".work-menu-item");
 
       images.forEach((image) => {
         const enter = () => {
-          cursor.classList.add("cursor-image-hover");
+          cursor.classList.add("work-menu-item-hover");
+          if (span) span.style.opacity = 1;
         };
 
         const leave = () => {
-          cursor.classList.remove("cursor-image-hover");
+          cursor.classList.remove("work-menu-item-hover");
+          if (span) span.style.opacity = 0;
         };
 
         image.addEventListener("mouseenter", enter);

@@ -5,8 +5,10 @@ import Work from "./pages/Work"
 import WorkCategorie from "./components/WorkCategorie"
 import Contact from "./pages/Contact"
 import PageTransitions from "./components/PageTransitions"
-
+import useLenis from "./components/hooks/useLenis";
+import BlurryCursor from "./components/BlurryCursor"
 export default function App() {
+  useLenis()
   const location = useLocation()
 
   return (
@@ -19,6 +21,7 @@ export default function App() {
             <Route path="/work/:slug" element={<WorkCategorie />} />
             <Route path="/contact" element={<Contact />} />
           </Routes>
+        <BlurryCursor />
         </PageTransitions>
       </AnimatePresence>
     </>
