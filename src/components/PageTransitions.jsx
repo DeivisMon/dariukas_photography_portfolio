@@ -25,11 +25,11 @@ export default function PageTransitions({ children }) {
               {Array.from({ length: 16 }).map((_, blockIndex) => (
                 <M.div
                   key={blockIndex}
-                  className="block relative flex-1 bg-black/85 m-[-0.25px] origin-top inset-shadow-xl"
+                  className="block relative flex-1 bg-black/85 m-[-0.25px] origin-top inset-shadow-xl mix-blend-difference"
                   initial={{ scaleY: 1, rotateX: 0 }}
                   animate={{ scaleY: 0, rotateX: 360 }}
                   transition={{
-                    duration: 0.75,
+                    duration: 1.25,
                     ease: "easeInOut",
                     delay: blockDelay(rowIndex, 8),
                   }}
@@ -64,7 +64,7 @@ export default function PageTransitions({ children }) {
             {Array.from({ length: 16 }).map((_, blockIndex) => (
               <M.div
                 key={blockIndex}
-                className="block relative flex-1 bg-black m-[-0.25px] origin-bottom inset-shadow-xl"
+                className="block relative flex-1 bg-black m-[-0.25px] origin-bottom inset-shadow-xl mix-blend-difference"
                 initial={{ scaleY: 0, rotateX: -360 }}
                 animate={{ scaleY: 0, rotateX: -360 }}
                 exit={{ scaleY: 1, rotateX: 0 }}

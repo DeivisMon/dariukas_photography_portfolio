@@ -24,18 +24,18 @@ export default function BlurryCursor() {
         willChange: "transform, width, height, background-color",
       }}
     >
-      {/* <span
+      <span
         className="cursor-text absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-0 transition-opacity duration-200 ease mix-blend-difference will-change-transform"
         style={{ color: "white", fontSize: "2.5rem", fontWeight: "900" }}
       >
-        <AiOutlineFullscreen />
-      </span> */}
-      <span
+        <MdOutlineOpenWith />
+      </span>
+      {/* <span
         className="cursor-text absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-spin pointer-events-none opacity-0 transition-opacity duration-200 ease mix-blend-difference will-change-transform"
         style={{ color: "white", fontSize: "2.8rem", fontWeight: "400" }}
       >
         <GiAbstract013 />
-      </span>
+      </span> */}
        <span
         className="cursor-arrow absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-0 transition-opacity duration-200 ease mix-blend-difference will-change-transform"
         style={{ color: "white", fontSize: "4rem", fontWeight: "900" }}

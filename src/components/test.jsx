@@ -8,7 +8,7 @@ import {
 } from "framer-motion";
 import { useRef } from "react";
 
-export default function ParallaxSection({ src }) {
+export default function ParallaxSection({ src, index }) {
   const ref = useRef(null);
   //   const inView = useInView(ref, { once: false, margin: "0px 0px -100px 0px" });
   //   const controls = useAnimation();
@@ -39,15 +39,15 @@ export default function ParallaxSection({ src }) {
   });
 
   const rawY = useTransform(scrollYProgress, [0, 1], ["-35%", "35%"]);
-  const y = useSpring(rawY, { damping: 20, stiffness: 500 });
+  const y = useSpring(rawY, { damping: 20, stiffness: 500, mass: 0.5 });
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
-  const grayscale = useTransform(scrollYProgress, [0, 1], [50, 0]);
+  const grayscale = useTransform(scrollYProgress, [0, 1], [100, 50]);
   const blur = useTransform(scrollYProgress, [0, 1], [0.5, 0]);
   const scale = useTransform(scrollYProgress, [0, 1], [1.25, 0.8]);
-  const hue = useTransform(scrollYProgress, [0, 1], [180, 0]);
+  // const hue = useTransform(scrollYProgress, [0, 1], [180, 0]);
   const finalFilter = useTransform(
-    [grayscale, blur, hue],
-    ([g, b, h]) => `grayscale(${g}%) blur(${b}px) hue-rotate(${h}deg)`
+    [  grayscale, blur ],
+    ([  g, b ]) => `grayscale(${g}%) blur(${b}px) `
   );
   const opacity = useTransform(scrollYProgress, [0, 1], [0.4, 1]);
 
@@ -58,15 +58,21 @@ export default function ParallaxSection({ src }) {
     >
       <Motion.img
         src={src}
-        alt="Gallery"
+        alt={`Image ${index}`}
         style={{
           y,
           scale,
           opacity,
           filter: finalFilter,
-          blur,
         }}
-        className="image-hover w-full h-auto ease-in object-contain will-change-transform scale-125 hover:grayscale-0"
+        whileHover={{
+          filter: "grayscale(20%)",
+        }}
+        transition={{
+          duration: 0.5,
+          ease: "easeInOut",
+        }}
+        className="image-hover w-full h-auto ease-in object-contain will-change-transform scale-125 grayscale"
       />
     </Motion.div>
   );

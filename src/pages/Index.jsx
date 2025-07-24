@@ -22,13 +22,13 @@ export default function Index() {
         <NavBar />
         <div className="absolute top-0 left-0 font-thin flex items-center justify-center h-screen w-screen pointer-events-none">
           <M.p
-            initial={{ scale: 5, opacity: 0 }}
+            initial={{ scale: 6, opacity: 0 }}
             animate={{
-              scale: [5, 4, 3, 2, 2],
-              opacity: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-              transition: { duration: 0.7, delay: 0.1 },
+              scale: [ 6, 5, 4, 3, 3],
+              opacity: [0, 1, 1, 1, 0],
+              transition: { duration: 1, },
             }}
-            className="text-[12rem] font-medium text-shadow-lg absolute z-100"
+            className="text-[12rem] font-medium text-shadow-lg absolute z-100 flex items-center justify-center h-full w-full"
           >
             Index
           </M.p>
@@ -38,15 +38,15 @@ export default function Index() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-10 mb-100"
+          className="mt-20 mb-100"
         >
-          <div className="columns-1 sm:columns-2 lg:columns-4 gap-16 space-y-16 w-full">
+          <div className="columns-1 sm:columns-2 lg:columns-4 items-start gap-1 space-y-1 w-full">
             {mockImages.map((img, i) => (
               <div
                 key={`${i}-${Math.random()}`}
                 className="break-inside-avoid hover:grayscale-0"
               >
-                <ParallaxSection src={img.src} />
+                <ParallaxSection src={img.src} index={i} />
               </div>
             ))}
           </div>

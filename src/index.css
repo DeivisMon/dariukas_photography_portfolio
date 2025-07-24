@@ -29,13 +29,21 @@ body {
 .footer::before {
   content: "";
   position: absolute;
-  top: -2px;
-  left: 50%;
-  transform: translateX(-50%);
-  min-width: 260px;
-  max-width: 280px;
-  height: 2px;
-  background-color: #000000;
+  bottom: 5px;
+  left: 57%;
+  width: 100%;
+  height: 6px;
+  background-color: #ffffff;
+}
+
+.footer::after {
+  content: "";
+  position: absolute;
+  bottom: 5px;
+  right: 57%;
+  width: 100%;
+  height: 6px;
+  background-color: #ffffff;
 }
 
 .cursor-image-hover {

@@ -24,11 +24,11 @@ export default function Work() {
       <NavBar />
       <div className="relative font-thin flex items-center justify-center h-screen w-screen">
         <M.p
-          initial={{ scale: 10, opacity: 0 }}
+          initial={{ scale: 6, opacity: 1 }}
           animate={{
-            scale: [10, 8, 6, 5, 4, 3, 3],
-            opacity: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
-            transition: { duration: 0.7, delay: 0.1 },
+            scale: [6, 5, 4, 3, 3],
+            opacity: [1, 1, 1, 1, 0],
+            transition: { duration: 1, delay: 0.1 },
           }}
           className="text-[12rem] font-medium text-shadow-lg absolute z-100"
         >
