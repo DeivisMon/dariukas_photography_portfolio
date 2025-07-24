@@ -7,7 +7,7 @@ export default function Contact() {
   return (
     <>
       <NavBar />
-      <div className="relative font-bold flex flex-col items-center justify-center h-screen w-screen">
+      <div className="relative flex flex-col items-center justify-center h-screen w-screen">
         <M.p
           initial={{ scale: 6, opacity: 0 }}
           animate={{
@@ -15,7 +15,7 @@ export default function Contact() {
             opacity: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
             transition: { duration: 0.7, delay: 0.05 },
           }}
-          className="text-[8rem] text-shadow-lg absolute z-100 "
+          className="text-[8rem] font-medium text-shadow-lg absolute z-100 "
         >
           Contact
         </M.p>

@@ -22,7 +22,7 @@ export default function Work() {
   return (
     <>
       <NavBar />
-      <div className="relative font-bold flex items-center justify-center h-screen w-screen">
+      <div className="relative font-thin flex items-center justify-center h-screen w-screen">
         <M.p
           initial={{ scale: 10, opacity: 0 }}
           animate={{
@@ -30,7 +30,7 @@ export default function Work() {
             opacity: [1, 1, 1, 1, 1, 1, 1, 1, 1, 0],
             transition: { duration: 0.7, delay: 0.1 },
           }}
-          className="text-[12rem] absolute z-100 mix-blend-difference"
+          className="text-[12rem] font-medium text-shadow-lg absolute z-100"
         >
           Work
         </M.p>

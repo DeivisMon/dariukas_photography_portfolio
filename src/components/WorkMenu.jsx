@@ -80,7 +80,7 @@ const handleClose = () => {
         opacity: 1,
         duration: 0.5,
         ease: "power2.out",
-        delay: 0.2 + i * 0.05, // optional stagger
+        delay: 0.2 + i * 0.05, 
       });
     }
   });
@@ -98,7 +98,7 @@ const handleClose = () => {
 
   return (
     <div className="w-full relative z-100">
-      <M.nav variants={containerVariants} initial="hidden" animate="show" >
+      <M.nav variants={containerVariants} initial="hidden" animate="show" className="perspective-midrange" >
         {items.map((item, idx) => (
           <MenuItem
             key={idx}
@@ -108,7 +108,6 @@ const handleClose = () => {
             onActivate={() => handleActivate(idx)}
             isActive={activeIndex === idx}
             isDimmed={activeIndex !== null && activeIndex !== idx}
-            
           />
         ))}
       </M.nav>
@@ -257,7 +256,7 @@ const MenuItem = React.forwardRef(function MenuItem(
           }}
         />
       ))}
-      <span className="flex justify-start w-full px-8">
+      <span className="flex justify-start w-full px-8 font-thin">
         <a>{text}</a>
       </span>
       <div className="marquee__img relative" style={{ width: "500px", height: "400px" }}>
@@ -272,7 +271,7 @@ const MenuItem = React.forwardRef(function MenuItem(
   return (
     <M.div
       variants={itemVariants}
-      className="menu__item work-menu-item  flex items-center h-30 cursor-pointer"
+      className="menu__item work-menu-item flex items-center h-30 cursor-pointer"
       ref={(el) => {
         itemRef.current = el;
         if (typeof ref === "function") ref(el);

@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import Images from "../data/images.json";
 import { gallerySettings as defaultSettings } from '../data/GalleryConfig.js';
-import { motion as M } from "framer-motion";
+import { motion as M, useScroll } from "framer-motion";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import ShaderImage from './ShaderImage';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -183,16 +184,16 @@ const DraggableGallery = () => {
           itemElement.style.borderRadius = `${settings.borderRadius}px`;
           itemElement.style.opacity = isExpanded && activeItemData?.id !== itemId ? 0 : 1;
 
+          const { scrollYProgress } = useScroll({
+            target: itemElement,
+            offset: ["start end", "end start"],
+          });
+
           itemElement.innerHTML = `
             <div 
               class="group w-full h-full overflow-hidden relative"
               >
-              <img
-                src="${content.image}"
-                alt="Image ${content.number}"
-                class="w-full h-full grayscale group-hover:grayscale-70 transition-all duration-500 group-hover:scale-115 transform transition-transform object-cover pointer-events-none will-change-transform"
-                style="box-shadow: inset 0 0 ${settings.vignetteSize}px rgba(0, 0, 0, 0.5);"
-              />
+              <ShaderImage src="${content.image}" scrollYProgress={scrollYProgress} />
               <div class="opacity-0 group-hover:opacity-100 absolute bg-gray-900/50 transition-opacity duration-300  bottom-0 left-0 w-full p-4 z-10">
                 <div class="text-white text-xs font-medium uppercase tracking-tight overflow-hidden h-4">
                   ${content.title}

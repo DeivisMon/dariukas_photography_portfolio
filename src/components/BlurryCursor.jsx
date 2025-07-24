@@ -31,7 +31,7 @@ export default function BlurryCursor() {
         <AiOutlineFullscreen />
       </span> */}
       <span
-        className="cursor-text absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 pointer-events-none opacity-0 transition-opacity duration-200 ease mix-blend-difference will-change-transform"
+        className="cursor-text absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-spin pointer-events-none opacity-0 transition-opacity duration-200 ease mix-blend-difference will-change-transform"
         style={{ color: "white", fontSize: "2.8rem", fontWeight: "400" }}
       >
         <GiAbstract013 />

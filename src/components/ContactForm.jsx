@@ -20,9 +20,9 @@ export default function ContactFrom() {
 
   return (
     <Motion.div
-      initial={{ opacity: 0, y: -50 }}
+      initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0, transition: { duration: 0.5, delay: 0.8 } }}
-      exit={{ opacity: 1, y: -50, transition: { duration: 0.5 } }}
+      exit={{ opacity: 1, y: 0, transition: { duration: 0.5 } }}
       className="relative w-full h-[80vh] md:h-[80vh] overflow-hidden shadow-xl flex flex-col md:flex-row z-100 my-8"
     >
       {/* Slankiojantis Image */}

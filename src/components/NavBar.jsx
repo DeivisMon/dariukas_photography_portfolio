@@ -4,7 +4,7 @@ import SocialIcons from "./SocialIcons";
 
 export default function NavBar() {
   return (
-    <div className="navbar fixed top-0 left-0 w-full h-18 flex items-center justify-between bg-black px-8 z-1000 overflow-hidden">
+    <div className="navbar fixed top-0 left-0 w-full h-18 flex items-center justify-between bg-black/25 backdrop-blur px-8 z-1000 overflow-hidden">
       <div className="logo flex-2 h-full flex items-center  px-4">
         <div className="relative nav-item flex items-start">
           <Link to="/">

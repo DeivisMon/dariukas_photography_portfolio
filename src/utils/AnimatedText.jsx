@@ -62,7 +62,7 @@ const AnimatedText = ({
                   ...letter,
                   hover: enableHover ? { y: "-100%" } : {},
                 }}
-                className="inline-block text-[#ffefd3]"
+                className="inline-block text-white"
                 transition={{
                   ...letter.show.transition,
                   ...(enableHover && {
