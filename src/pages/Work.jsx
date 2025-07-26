@@ -30,7 +30,7 @@ export default function Work() {
             opacity: [1, 1, 1, 1, 0],
             transition: { duration: 1, delay: 0.1 },
           }}
-          className="text-[12rem] font-medium text-shadow-lg absolute z-100"
+          className="text-[12rem] font-bold text-shadow-lg absolute z-100"
         >
           Work
         </M.p>

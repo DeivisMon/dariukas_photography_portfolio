@@ -38,7 +38,7 @@ export default function ParallaxSection({ src, index }) {
     offset: ["start end", "end start"],
   });
 
-  const rawY = useTransform(scrollYProgress, [0, 1], ["-35%", "35%"]);
+  const rawY = useTransform(scrollYProgress, [0, 1], ["-15%", "15%"]);
   const y = useSpring(rawY, { damping: 20, stiffness: 500, mass: 0.5 });
   const x = useTransform(scrollYProgress, [0, 1], ["0%", "-10%"]);
   const grayscale = useTransform(scrollYProgress, [0, 1], [100, 50]);

@@ -25,7 +25,7 @@ export default function PageTransitions({ children }) {
               {Array.from({ length: 16 }).map((_, blockIndex) => (
                 <M.div
                   key={blockIndex}
-                  className="block relative flex-1 bg-black/85 m-[-0.25px] origin-top inset-shadow-xl mix-blend-difference"
+                  className="block relative flex-1 bg-black/90 m-[-0.25px] origin-top inset-shadow-xl mix-blend-difference"
                   initial={{ scaleY: 1, rotateX: 0 }}
                   animate={{ scaleY: 0, rotateX: 360 }}
                   transition={{

@@ -40,12 +40,9 @@ export default function Index() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="mt-20 mb-100"
         >
-          <div className="columns-1 sm:columns-2 lg:columns-4 items-start gap-1 space-y-1 w-full">
+          <div className="columns-1 sm:columns-2 lg:columns-4 gap-2 [&>div]:mt-2">
             {mockImages.map((img, i) => (
-              <div
-                key={`${i}-${Math.random()}`}
-                className="break-inside-avoid hover:grayscale-0"
-              >
+              <div key={i}>
                 <ParallaxSection src={img.src} index={i} />
               </div>
             ))}
